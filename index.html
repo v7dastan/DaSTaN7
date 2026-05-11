@@ -2,173 +2,197 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DaSTaN 7 - Laser Engraving Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00d2ff;
-            --bg-dark: #121212;
-            --bg-panel: #1e1e1e;
-            --text-light: #e0e0e0;
-            --border: #333;
+            --primary-hover: #00a8cc;
+            --bg-dark: #0f0f13;
+            --bg-panel: #1c1c22;
+            --bg-input: #2a2a32;
+            --text-light: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border: #33333b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
             
             /* Modal Variables (Hatch Info) */
-            --modal-bg: #1e1e24;
+            --modal-bg: #1c1c22;
             --modal-primary: #00adb5;
-            --modal-text: #eeeeee;
-            --modal-muted: #aaaaaa;
+            --modal-text: #f4f4f5;
+            --modal-muted: #a1a1aa;
             --modal-box: rgba(255, 255, 255, 0.05);
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-light); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: all 0.3s ease; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-dark); color: var(--text-light); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
         /* Login Screen */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(18, 18, 18, 0.95); display: flex; justify-content: center; align-items: center; z-index: 3000;
+            background: rgba(15, 15, 19, 0.98); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; z-index: 3000; padding: 20px;
         }
         .login-box {
-            background: var(--bg-panel); padding: 40px; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
-            text-align: center; width: 350px; border: 1px solid var(--border); max-width: 90%;
+            background: var(--bg-panel); padding: 40px; border-radius: var(--radius-lg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); text-align: center; width: 100%; max-width: 380px; border: 1px solid var(--border);
         }
-        .login-box h1 { color: var(--primary); margin-bottom: 5px; font-size: 28px; }
-        .login-box p.subtitle { color: #888; margin-bottom: 25px; font-size: 14px; }
+        .login-box h1 { color: var(--primary); margin-bottom: 5px; font-size: 32px; font-weight: 800; letter-spacing: 1px; }
+        .login-box p.subtitle { color: var(--text-muted); margin-bottom: 30px; font-size: 15px; }
         
         .login-box input {
-            width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid var(--border);
-            background: #2a2a2a; color: white; font-size: 16px; text-align: center;
+            width: 100%; padding: 15px; margin: 10px 0; border-radius: var(--radius-md); border: 1px solid var(--border);
+            background: var(--bg-input); color: white; font-size: 16px; text-align: center; outline: none; transition: 0.3s;
         }
+        .login-box input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
         .login-box button {
-            width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 6px;
-            background: var(--primary); color: #000; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: var(--radius-md);
+            background: var(--primary); color: #000; font-weight: 800; font-size: 17px; cursor: pointer; transition: 0.3s;
         }
-        .login-box button:hover { background: #00a8cc; }
-        .error-msg { color: #ff4d4d; font-size: 14px; margin-top: 10px; display: none; }
+        .login-box button:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .error-msg { color: #ff4d4d; font-size: 14px; margin-top: 15px; display: none; }
 
         /* Contact Box in Login */
-        .contact-box {
-            margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border);
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .contact-box span { color: #aaa; font-size: 13px; font-weight: bold; margin-bottom: 5px; }
+        .contact-box { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
+        .contact-box span { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 5px; }
         .contact-link {
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            text-decoration: none; color: var(--text-light); background: #2a2a2a;
-            padding: 10px; border-radius: 6px; font-size: 14px; border: 1px solid var(--border);
-            transition: all 0.3s ease; font-family: Tahoma, sans-serif; direction: ltr;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            text-decoration: none; color: var(--text-light); background: var(--bg-input);
+            padding: 12px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; border: 1px solid var(--border); transition: all 0.3s ease; direction: ltr;
         }
-        .contact-link:hover { border-color: var(--primary); color: var(--primary); background: #333; }
-        .contact-link.snapchat:hover { border-color: #fffc00; color: #fffc00; text-shadow: 0 0 5px rgba(255, 252, 0, 0.3); }
+        .contact-link:hover { border-color: var(--primary); color: var(--primary); background: #33333b; }
+        .contact-link.snapchat:hover { border-color: #fffc00; color: #fffc00; }
 
         /* App Screen */
         #app-screen { display: none; height: 100%; flex-direction: column; }
-        header { background: var(--bg-panel); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
-        header h1 { color: var(--primary); font-size: 24px; font-family: 'Segoe UI', sans-serif;}
-        .header-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-        .btn { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; }
-        .btn:hover { background: #00a8cc; }
-        .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
-        .btn-outline:hover { background: rgba(0, 210, 255, 0.1); }
-        .btn-warning { border-color: #f39c12; color: #f39c12; }
+        header { background: var(--bg-panel); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .header-title-box { display: flex; flex-direction: column; }
+        header h1 { color: var(--primary); font-size: 24px; font-family: 'Segoe UI', sans-serif; font-weight: 800; margin-bottom: 5px;}
+        #welcomeMessage { color: #fff; font-size: 14px; font-weight: 700; background: var(--bg-input); padding: 4px 12px; border-radius: 20px; display: inline-block; width: fit-content; border: 1px solid var(--primary); box-shadow: 0 0 10px rgba(0, 210, 255, 0.1); }
+        .header-buttons { display: flex; gap: 10px; }
+        .btn { background: var(--primary); color: #000; border: none; padding: 10px 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 14px; display: flex; align-items: center; gap: 6px; white-space: nowrap;}
+        .btn:hover { background: var(--primary-hover); }
+        .btn-outline { background: rgba(0, 210, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: rgba(0, 210, 255, 0.2); }
+        
+        .btn-warning { border-color: #f39c12; color: #f39c12; background: transparent; }
         .btn-warning:hover { background: rgba(243, 156, 18, 0.1); }
 
-        .main-content { display: flex; flex: 1; height: calc(100vh - 65px); transition: all 0.3s ease; }
+        .main-content { display: flex; flex: 1; height: calc(100vh - 80px); overflow: hidden; }
         
-        /* Sidebar */
-        .sidebar { width: 350px; background: var(--bg-panel); padding: 20px; border-left: 1px solid var(--border); overflow-y: auto; transition: all 0.3s ease; }
-        .control-group { margin-bottom: 20px; }
-        .control-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #aaa; font-size: 13px; }
-        .control-group input[type="range"] { width: 100%; cursor: pointer; }
-        .control-group select { width: 100%; padding: 10px; background: #2a2a2a; color: white; border: 1px solid var(--border); border-radius: 6px; }
+        /* Sidebar (Controls) */
+        .sidebar { width: 380px; background: var(--bg-panel); padding: 25px; border-left: 1px solid var(--border); overflow-y: auto; z-index: 10;}
+        .control-group { margin-bottom: 22px; }
+        .control-group label { display: block; margin-bottom: 10px; font-weight: 700; color: var(--text-muted); font-size: 14px; }
+        .control-group input[type="range"] { width: 100%; height: 6px; border-radius: 4px; background: var(--border); outline: none; -webkit-appearance: none; }
+        .control-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; cursor: pointer; transition: 0.2s; }
+        .control-group input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        .control-group select { width: 100%; padding: 14px; background: var(--bg-input); color: white; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 15px; font-weight: 500; outline: none; cursor: pointer; }
+        .control-group select:focus { border-color: var(--primary); }
         
-        .ezcad-panel { background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid #444; margin-top: 20px; }
-        .ezcad-panel h3 { color: var(--primary); margin-bottom: 15px; font-size: 15px; text-align: center; }
-        .param-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
-        .param-row span:last-child { color: var(--primary); font-weight: bold; }
+        .ezcad-panel { background: var(--bg-input); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-top: 25px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
+        .ezcad-panel h3 { color: var(--primary); margin-bottom: 18px; font-size: 16px; text-align: center; border-bottom: 1px dashed var(--border); padding-bottom: 10px;}
+        .param-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; font-weight: 500;}
+        .param-row span:last-child { color: var(--primary); font-weight: 800; font-family: monospace; font-size: 16px;}
 
-        /* Workspace */
-        .workspace { flex: 1; display: flex; padding: 20px; gap: 20px; background: #0a0a0a; transition: all 0.3s ease; }
-        .canvas-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-panel); border-radius: 8px; border: 1px solid var(--border); padding: 10px; min-height: 300px; }
-        .canvas-title { text-align: center; margin-bottom: 10px; font-weight: bold; color: #888; font-size: 16px; }
-        .canvas-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; background: #111; border-radius: 4px; min-height: 250px; }
-        canvas { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-        .file-input-wrapper { text-align: center; margin-bottom: 20px; }
+        .file-input-wrapper { margin-bottom: 25px; }
         input[type="file"] { display: none; }
-        .file-label { background: #333; color: white; padding: 12px 20px; border-radius: 6px; cursor: pointer; display: inline-block; transition: 0.3s; width: 100%; text-align: center; font-weight: bold; }
-        .file-label:hover { background: #444; }
+        .file-label { background: var(--bg-input); color: white; padding: 15px; border-radius: var(--radius-md); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%; font-weight: 800; border: 2px dashed var(--border); transition: 0.3s; font-size: 16px;}
+        .file-label:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 210, 255, 0.05); }
 
         /* ========================================= */
-        /* Mobile Mode Styles (ئەڤەیە یا من زێدە کری) */
+        /* SINGLE WORKSPACE (Before/After Slider)    */
         /* ========================================= */
-        body.mobile-mode { overflow-y: auto; height: auto; }
-        body.mobile-mode #app-screen { height: auto; }
-        body.mobile-mode .main-content { flex-direction: column; height: auto; }
-        body.mobile-mode .sidebar { width: 100%; border-left: none; border-bottom: 2px solid var(--primary); max-height: none; }
-        body.mobile-mode .workspace { flex-direction: column; padding: 15px; gap: 15px; }
-        body.mobile-mode .canvas-container { width: 100%; height: 400px; }
+        .workspace { flex: 1; display: flex; padding: 25px; background: var(--bg-dark); overflow: hidden; justify-content: center; align-items: center; }
+        .canvas-container { width: 100%; height: 100%; max-width: 1000px; display: flex; flex-direction: column; background: var(--bg-panel); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        .canvas-title { text-align: center; margin-bottom: 15px; font-weight: 800; color: var(--text-muted); font-size: 16px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;}
+        
+        .compare-wrapper { position: relative; flex: 1; width: 100%; overflow: hidden; background: #111; border-radius: var(--radius-md); display: flex; justify-content: center; align-items: center; }
+        .compare-wrapper canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+        #canvasBefore { z-index: 1; pointer-events: none; }
+        #canvasAfter { z-index: 2; pointer-events: none; clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+        
+        /* Direction: ltr fixes the reverse slider issue */
+        .compare-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; opacity: 0; cursor: ew-resize; direction: ltr; }
+        
+        .slider-line { position: absolute; top: 0; left: 50%; width: 3px; height: 100%; background: var(--primary); z-index: 3; transform: translateX(-50%); pointer-events: none; box-shadow: 0 0 8px rgba(0,0,0,0.8); }
+        .slider-thumb { position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; background: var(--primary); color: #000; border-radius: 50%; z-index: 4; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 18px; pointer-events: none; box-shadow: 0 0 15px rgba(0, 0, 0, 0.8); border: 3px solid #fff; }
+
+        /* ========================================= */
+        /* MANUAL MOBILE OVERRIDE CLASSES            */
+        /* ========================================= */
+        body.mobile-mode { overflow-y: auto; }
+        body.mobile-mode header { flex-direction: column; padding: 15px; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
+        body.mobile-mode .header-title-box { align-items: center; }
+        body.mobile-mode header h1 { font-size: 22px; }
+        body.mobile-mode .header-buttons { width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        body.mobile-mode .btn { justify-content: center; padding: 10px; font-size: 12px; }
+        
+        body.mobile-mode .main-content { flex-direction: column; height: auto; overflow: visible; }
+        
+        /* Canvas Area on Top */
+        body.mobile-mode .workspace { order: 1; padding: 10px; background: #000; height: 450px; flex: none; width: 100%; }
+        body.mobile-mode .canvas-container { border-radius: 0; border: none; padding: 0; box-shadow: none; background: transparent; height: 100%;}
+        body.mobile-mode .canvas-title { font-size: 13px; margin-bottom: 10px; }
+        
+        /* Controls on Bottom */
+        body.mobile-mode .sidebar { order: 2; width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 25px 20px; background: var(--bg-panel); border-radius: 24px 24px 0 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.5); z-index: 10;}
+        
+        body.mobile-mode .control-group input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
+        body.mobile-mode .control-group select { padding: 16px; font-size: 16px; }
+        body.mobile-mode .slider-thumb { width: 35px; height: 35px; font-size: 14px; }
+
+        /* Auto Mobile Layout for small screens */
+        @media (max-width: 850px) {
+            body { overflow-y: auto; }
+            header { flex-direction: column; padding: 15px; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
+            .header-title-box { align-items: center; }
+            header h1 { font-size: 22px; }
+            .header-buttons { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .header-buttons #viewToggleBtn { display: none; } /* Hide toggle on small screens */
+            .btn { justify-content: center; padding: 12px; font-size: 13px; }
+            
+            .main-content { flex-direction: column; height: auto; overflow: visible; }
+            .workspace { order: 1; padding: 10px; background: #000; height: 400px; flex: none; width: 100%; }
+            .canvas-container { border-radius: 0; border: none; padding: 0; box-shadow: none; background: transparent; height: 100%;}
+            .canvas-title { font-size: 13px; margin-bottom: 10px; }
+            
+            .sidebar { order: 2; width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 25px 20px; background: var(--bg-panel); border-radius: 24px 24px 0 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.5); z-index: 10;}
+            
+            .control-group input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
+            .control-group select { padding: 16px; font-size: 16px; }
+            .slider-thumb { width: 35px; height: 35px; font-size: 14px; }
+        }
 
         /* Modal Styles */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 2000;
-            justify-content: center; align-items: center; padding: 20px;
-            opacity: 0; transition: opacity 0.3s ease;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 4000; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { display: flex; opacity: 1; }
-        
-        .modal-container {
-            background-color: var(--modal-bg); width: 100%; max-width: 700px; padding: 40px;
-            border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            border-top: 6px solid var(--modal-primary); position: relative;
-            max-height: 90vh; overflow-y: auto; transition: all 0.4s ease;
-        }
-
-        .close-btn {
-            position: absolute; top: 20px; left: 20px; font-size: 28px; color: var(--modal-muted);
-            cursor: pointer; transition: 0.3s; background: none; border: none; outline: none;
-        }
+        .modal-container { background-color: var(--modal-bg); width: 100%; max-width: 600px; padding: 35px; border-radius: var(--radius-lg); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); border-top: 6px solid var(--modal-primary); position: relative; max-height: 90vh; overflow-y: auto; }
+        .close-btn { position: absolute; top: 15px; left: 20px; font-size: 32px; color: var(--modal-muted); cursor: pointer; transition: 0.3s; background: none; border: none; outline: none; }
         .close-btn:hover { color: #ff4d4d; }
-
-        .h-header { text-align: center; margin-bottom: 30px; }
-        .h-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--modal-primary); transition: color 0.4s ease; }
-        .h-header p { font-size: 15px; color: var(--modal-muted); direction: ltr; }
-
-        .h-form-group { margin-bottom: 25px; }
-        .h-form-group label { display: block; font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--modal-text); text-align: right; }
-        
-        .modal-container select, .modal-container input[type="text"] {
-            width: 100%; padding: 16px; font-size: 16px; font-weight: 500;
-            background-color: rgba(0,0,0,0.2); color: var(--modal-text);
-            border: 2px solid var(--modal-box); border-radius: 12px; outline: none; transition: all 0.3s ease;
-        }
-        .modal-container select { cursor: pointer; direction: ltr; appearance: auto; }
+        .h-header { text-align: center; margin-bottom: 25px; }
+        .h-header h1 { font-size: 24px; font-weight: 800; margin-bottom: 5px; color: var(--modal-primary); }
+        .h-header p { font-size: 14px; color: var(--modal-muted); direction: ltr; }
+        .h-form-group { margin-bottom: 20px; }
+        .h-form-group label { display: block; font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--modal-text); text-align: right; }
+        .modal-container select, .modal-container input[type="text"] { width: 100%; padding: 15px; font-size: 16px; font-weight: 600; background-color: rgba(0,0,0,0.3); color: var(--modal-text); border: 2px solid var(--modal-box); border-radius: var(--radius-md); outline: none; }
         .modal-container select:focus, .modal-container input[type="text"]:focus { border-color: var(--modal-primary); }
-
-        .modal-container input[type="text"] {
-            color: var(--modal-primary); font-size: 20px; font-weight: 800; text-align: center;
-            direction: ltr; letter-spacing: 1px; border: 2px dashed var(--modal-primary);
-        }
-
-        .h-details-wrapper { display: none; opacity: 0; transform: translateY(15px); transition: all 0.5s ease; }
+        .modal-container input[type="text"] { color: var(--modal-primary); font-size: 20px; font-weight: 800; text-align: center; direction: ltr; letter-spacing: 2px; border: 2px dashed var(--modal-primary); }
+        .h-details-wrapper { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
         .h-details-wrapper.active { display: block; opacity: 1; transform: translateY(0); }
-
-        .h-info-card { background-color: var(--modal-box); border-radius: 16px; padding: 25px; border-right: 5px solid var(--modal-primary); transition: border-color 0.4s ease; }
-        .h-material-title { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 25px; direction: ltr; color: var(--modal-primary); border-bottom: 2px solid var(--modal-box); padding-bottom: 15px; transition: color 0.4s ease; }
-        
-        .h-info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(128, 128, 128, 0.2); }
+        .h-info-card { background-color: var(--modal-box); border-radius: var(--radius-lg); padding: 20px; border-right: 5px solid var(--modal-primary); }
+        .h-material-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 20px; direction: ltr; color: var(--modal-primary); border-bottom: 2px solid var(--modal-box); padding-bottom: 12px; }
+        .h-info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .h-info-row:last-child { border-bottom: none; }
         .h-label-group { display: flex; flex-direction: column; text-align: right; }
-        .h-label-ku { font-size: 16px; font-weight: 700; color: var(--modal-text); }
+        .h-label-ku { font-size: 15px; font-weight: 700; color: var(--modal-text); }
         .h-label-en { font-size: 12px; color: var(--modal-muted); direction: ltr; text-align: right; }
-        .h-value-box { background-color: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; color: var(--modal-primary); direction: ltr; transition: color 0.4s ease; }
-
-        .h-notes-section { margin-top: 20px; background-color: rgba(255, 0, 0, 0.05); border-right: 4px solid #e74c3c; padding: 15px 20px; border-radius: 10px; }
-        .h-notes-title { font-weight: 800; color: #e74c3c; margin-bottom: 8px; display: flex; justify-content: space-between; }
-        .h-notes-text { font-size: 15px; line-height: 1.6; direction: ltr; text-align: left; color: var(--modal-text); font-weight: 500; }
-
+        .h-value-box { background-color: rgba(0,0,0,0.5); padding: 8px 14px; border-radius: 8px; font-family: monospace; font-size: 15px; font-weight: bold; color: var(--modal-primary); direction: ltr; }
+        .h-notes-section { margin-top: 15px; background-color: rgba(231, 76, 60, 0.1); border-right: 4px solid #e74c3c; padding: 15px; border-radius: var(--radius-md); }
+        .h-notes-title { font-weight: 800; color: #e74c3c; margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;}
+        .h-notes-text { font-size: 14px; line-height: 1.6; direction: ltr; text-align: left; color: var(--modal-text); font-weight: 500; }
     </style>
 </head>
 <body>
@@ -176,7 +200,7 @@
     <div id="login-screen">
         <div class="login-box">
             <h1>DaSTaN 7</h1>
-            <p class="subtitle">Laser Engraving Studio</p>
+            <p class="subtitle">Laser Engraving App</p>
             
             <input type="text" id="username" placeholder="ناڤێ بکارئینەری (Username)">
             <input type="password" id="password" placeholder="پاسوارد (Password)">
@@ -184,24 +208,23 @@
             <p class="error-msg" id="error-msg">ناڤ یان پاسوارد خەلەتە!</p>
             
             <div class="contact-box">
-                <span>پەیوەندی کرن ب گەشەپێدەری ڤە:</span>
-                <a href="tel:07506887626" class="contact-link">
-                    📞 0750 688 7626
-                </a>
-                <a href="https://www.snapchat.com/add/dasta.n" target="_blank" class="contact-link snapchat">
-                    👻 dasta.n
-                </a>
+                <span>پەیوەندی ب گەشەپێدەری ڤە:</span>
+                <a href="tel:07506887626" class="contact-link">📞 0750 688 7626</a>
+                <a href="https://www.snapchat.com/add/dasta.n" target="_blank" class="contact-link snapchat">👻 dasta.n</a>
             </div>
         </div>
     </div>
 
     <div id="app-screen">
         <header>
-            <h1>DaSTaN 7 <span style="font-size: 14px; color: #888;">| Laser Machine 50W Studio</span></h1>
+            <div class="header-title-box">
+                <h1>DaSTaN 7 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">| Laser Studio</span></h1>
+                <span id="welcomeMessage"></span>
+            </div>
             <div class="header-buttons">
-                <button class="btn btn-outline btn-warning" id="viewToggleBtn" onclick="toggleViewMode()">📱 شێوازێ مۆبایلێ</button>
-                <button class="btn btn-outline" onclick="openHatchModal()">📋 پێزانینێن نەخشێ (Hatch Info)</button>
-                <button class="btn" onclick="saveImage()">سەیڤکرن (Save)</button>
+                <button class="btn btn-outline btn-warning" id="viewToggleBtn" onclick="toggleViewMode()">📱 مۆبایل</button>
+                <button class="btn btn-outline" onclick="openHatchModal()">📋 پێزانینێن نەخشێ</button>
+                <button class="btn" onclick="saveImage()">💾 سەیڤکرن</button>
             </div>
         </header>
 
@@ -209,13 +232,22 @@
             <div class="sidebar">
                 <div class="file-input-wrapper">
                     <label class="file-label">
-                        هەلبژارتنا وێنەی (Upload)
+                        📤 هەلبژارتنا وێنەی (Upload)
                         <input type="file" id="imageLoader" accept="image/*">
                     </label>
                 </div>
 
                 <div class="control-group">
-                    <label>هەلبژارتنا ماددەی (Material Type)</label>
+                    <label>⚡ هێزا ئامیرێ لێزەرێ (Laser Wattage)</label>
+                    <select id="laserWattage" onchange="applyAutoSettings()">
+                        <option value="50">لێزەرا 50W (ستاندارد)</option>
+                        <option value="30">لێزەرا 30W</option>
+                        <option value="20">لێزەرا 20W</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>🛠️ هەلبژارتنا ماددەی (Material Type)</label>
                     <select id="mainMaterialSelect" onchange="applyAutoSettings()">
                         <option value="none">-- ماددەی هەلبژێرە --</option>
                         <option value="stainless_steel">مەعدەن (Stainless Steel)</option>
@@ -227,7 +259,7 @@
                 </div>
 
                 <div class="control-group">
-                    <label>شێوازێ لێزەرێ (Dithering Mode)</label>
+                    <label>🔲 شێوازێ لێزەرێ (Dithering Mode)</label>
                     <select id="ditherMode" onchange="processImage()">
                         <option value="floyd">خاڵ خاڵ (Floyd-Steinberg) - باشترین</option>
                         <option value="threshold">ڕەش و سپی (Threshold)</option>
@@ -236,22 +268,22 @@
                 </div>
 
                 <div class="control-group">
-                    <label>تیژکرنا وێنەی (Unsharp Mask)</label>
+                    <label>🔪 تیژکرنا وێنەی (Unsharp Mask)</label>
                     <input type="range" id="unsharpLevel" min="0" max="100" value="0" step="5" oninput="processImage()">
                 </div>
 
                 <div class="control-group">
-                    <label>ڕوونی (Brightness)</label>
+                    <label>☀️ ڕوونی (Brightness)</label>
                     <input type="range" id="brightness" min="-100" max="100" value="0" oninput="processImage()">
                 </div>
 
                 <div class="control-group">
-                    <label>کونتراست (Contrast)</label>
+                    <label>🌗 کونتراست (Contrast)</label>
                     <input type="range" id="contrast" min="-100" max="100" value="0" oninput="processImage()">
                 </div>
 
                 <div class="ezcad-panel">
-                    <h3>⚙️ ڕێکخستنێن ب لەز بۆ 50W</h3>
+                    <h3 id="ez-panel-title">⚙️ ڕێکخستنێن زیرەک بۆ 50W</h3>
                     <div class="param-row"><span>Speed:</span> <span id="ez-speed">--- mm/s</span></div>
                     <div class="param-row"><span>Power:</span> <span id="ez-power">--- %</span></div>
                     <div class="param-row"><span>Frequency:</span> <span id="ez-freq">--- kHz</span></div>
@@ -262,12 +294,19 @@
 
             <div class="workspace">
                 <div class="canvas-container">
-                    <div class="canvas-title">Before (بەرێ)</div>
-                    <div class="canvas-wrapper"><canvas id="canvasBefore"></canvas></div>
-                </div>
-                <div class="canvas-container">
-                    <div class="canvas-title">After (پشتی)</div>
-                    <div class="canvas-wrapper" id="afterWrapper"><canvas id="canvasAfter"></canvas></div>
+                    <div class="canvas-title">
+                        <span style="color: var(--text-muted);">بەرێ (Original)</span>
+                        <span style="font-size: 13px; font-weight: normal; color: var(--primary);">↔ سلایدەرێ بکێشە</span>
+                        <span style="color: var(--primary);">پشتی (Preview)</span>
+                    </div>
+                    <div class="compare-wrapper" id="compareWrapper">
+                        <canvas id="canvasBefore"></canvas>
+                        <canvas id="canvasAfter"></canvas>
+                        
+                        <div class="slider-line" id="sliderLine"></div>
+                        <div class="slider-thumb" id="sliderThumb">↔</div>
+                        <input type="range" min="0" max="100" value="50" class="compare-slider" id="compareSlider" oninput="updateCompareSlider()">
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,14 +321,14 @@
             </div>
             
             <div class="h-form-group">
-                <label>کەرەمکە ماددەیەکێ هەلبژێرە / Select Material:</label>
+                <label>کەرەمکە ماددەیەکێ هەلبژێرە (Select Material):</label>
                 <select id="hatchMaterialSelect" onchange="updateHatchUI()">
                     <option value="">-- هەلبژێرە (Select) --</option>
                 </select>
             </div>
 
             <div class="h-form-group">
-                <label>تاقیکرنا ڕەنگێ نڤیسینێ / Color Preview:</label>
+                <label>تاقیکرنا ڕەنگێ نڤیسینێ (Color Preview):</label>
                 <input type="text" value="DaSTaN 7" placeholder="ل ڤێرە بنڤیسە...">
             </div>
 
@@ -304,7 +343,7 @@
 
     <script>
         // ==========================================
-        // 0. Toggle Mobile/PC View
+        // 0. Mobile Mode Toggle Logic
         // ==========================================
         let isMobileMode = false;
         function toggleViewMode() {
@@ -312,32 +351,47 @@
             const btn = document.getElementById('viewToggleBtn');
             if (isMobileMode) {
                 document.body.classList.add('mobile-mode');
-                btn.innerHTML = '🖥️ شێوازێ کۆمپیوتەری';
+                btn.innerHTML = '🖥️ کۆمپیوتەر';
             } else {
                 document.body.classList.remove('mobile-mode');
-                btn.innerHTML = '📱 شێوازێ مۆبایلێ';
+                btn.innerHTML = '📱 مۆبایل';
             }
+            // ڕێکخستنا جهێ سلایدەری پشتی گۆڕینێ
+            setTimeout(updateCompareSlider, 100);
         }
 
         // ==========================================
-        // 1. Login & App Control
+        // 1. Login & Dynamic Welcome Logic
         // ==========================================
         function checkLogin() {
-            const user = document.getElementById('username').value;
+            const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value;
-            if (user === 'Dastan' && pass === '19971997') {
+            
+            if ((user === 'Dastan' && pass === '19971997') || (user === 'lora' && pass === 'dastan1')) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-screen').style.display = 'flex';
+                document.getElementById('welcomeMessage').innerText = `👋 بخێرهاتی ${user}`;
             } else {
                 document.getElementById('error-msg').style.display = 'block';
             }
         }
         document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
 
+        // ==========================================
+        // 2. Before / After Slider Logic
+        // ==========================================
+        function updateCompareSlider() {
+            const val = document.getElementById('compareSlider').value;
+            document.getElementById('canvasAfter').style.clipPath = `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`;
+            document.getElementById('sliderLine').style.left = `${val}%`;
+            document.getElementById('sliderThumb').style.left = `${val}%`;
+        }
+
         let originalImage = null;
         const canvasBefore = document.getElementById('canvasBefore'); const ctxBefore = canvasBefore.getContext('2d');
         const canvasAfter = document.getElementById('canvasAfter'); const ctxAfter = canvasAfter.getContext('2d', { willReadFrequently: true });
 
+        // Base Data for 50W
         const mainMaterialData = {
             stainless_steel: { speed: 800, power: 60, freq: 30, hatch: 0.05, pass: 1, previewBg: '#444' },
             gold_silver: { speed: 500, power: 85, freq: 40, hatch: 0.03, pass: 5, previewBg: '#cca94b' },
@@ -346,7 +400,6 @@
             leather: { speed: 1500, power: 25, freq: 30, hatch: 0.08, pass: 1, previewBg: '#5c3a21' }
         };
 
-        // Load Image
         document.getElementById('imageLoader').addEventListener('change', function(e) {
             const reader = new FileReader();
             reader.onload = function(event) {
@@ -356,23 +409,51 @@
                     let maxDim = 1200; let width = img.width; let height = img.height;
                     if (width > maxDim || height > maxDim) { const ratio = Math.min(maxDim/width, maxDim/height); width = Math.round(width*ratio); height = Math.round(height*ratio); }
                     canvasBefore.width = canvasAfter.width = width; canvasBefore.height = canvasAfter.height = height;
-                    ctxBefore.drawImage(img, 0, 0, width, height); processImage();
+                    ctxBefore.drawImage(img, 0, 0, width, height); 
+                    processImage();
+                    canvasBefore.style.backgroundColor = "#fff"; 
                 }
                 img.src = event.target.result;
             }
             reader.readAsDataURL(e.target.files[0]);
         });
 
+        // ⚡ Smart Auto Settings based on Wattage and Material
         function applyAutoSettings() {
             const mat = document.getElementById('mainMaterialSelect').value;
-            if(mat === 'none') return;
-            const data = mainMaterialData[mat];
-            document.getElementById('ez-speed').innerText = data.speed + " mm/s";
-            document.getElementById('ez-power').innerText = data.power + " %";
-            document.getElementById('ez-freq').innerText = data.freq + " kHz";
-            document.getElementById('ez-hatch').innerText = data.hatch + " mm";
-            document.getElementById('ez-pass').innerText = data.pass;
-            document.getElementById('afterWrapper').style.backgroundColor = data.previewBg;
+            const wattage = parseInt(document.getElementById('laserWattage').value);
+            
+            document.getElementById('ez-panel-title').innerText = `⚙️ ڕێکخستنێن زیرەک بۆ ${wattage}W`;
+
+            if(mat === 'none') {
+                document.getElementById('ez-speed').innerText = "--- mm/s";
+                document.getElementById('ez-power').innerText = "--- %";
+                document.getElementById('ez-freq').innerText = "--- kHz";
+                document.getElementById('ez-hatch').innerText = "--- mm";
+                document.getElementById('ez-pass').innerText = "---";
+                document.getElementById('compareWrapper').style.backgroundColor = "#111";
+                return;
+            }
+
+            let baseData = JSON.parse(JSON.stringify(mainMaterialData[mat]));
+            let calcPower = baseData.power;
+            let calcSpeed = baseData.speed;
+
+            if (wattage === 30) {
+                calcPower = Math.min(100, Math.round(baseData.power * 1.4));
+                calcSpeed = Math.round(baseData.speed * 0.85);
+            } else if (wattage === 20) {
+                calcPower = Math.min(100, Math.round(baseData.power * 1.7));
+                calcSpeed = Math.round(baseData.speed * 0.70);
+            }
+
+            document.getElementById('ez-speed').innerText = calcSpeed + " mm/s";
+            document.getElementById('ez-power').innerText = calcPower + " %";
+            document.getElementById('ez-freq').innerText = baseData.freq + " kHz";
+            document.getElementById('ez-hatch').innerText = baseData.hatch + " mm";
+            document.getElementById('ez-pass').innerText = baseData.pass;
+            
+            document.getElementById('compareWrapper').style.backgroundColor = baseData.previewBg;
 
             if(['gold_silver', 'brass', 'aluminum'].includes(mat)) {
                 document.getElementById('contrast').value = 40; document.getElementById('brightness').value = 10;
@@ -384,7 +465,7 @@
             processImage();
         }
 
-        // True Matrix Sharpen
+        // Image Processing Tools
         function applySharpen(ctx, w, h, amount) {
             if (amount <= 0) return;
             const imgData = ctx.getImageData(0, 0, w, h); const src = imgData.data; const dst = new Uint8ClampedArray(src.length); const mix = amount / 100;
@@ -455,7 +536,7 @@
         }
 
         // ==========================================
-        // 2. Hatch Info Modal Logic
+        // 3. Hatch Info Modal Logic
         // ==========================================
         const hatchModal = document.getElementById('hatchModal');
         function openHatchModal() { hatchModal.classList.add('show'); }
