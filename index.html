@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DaSTaN 7 - Laser Engraving Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
     <style>
         :root {
             --primary: #00d2ff;
@@ -108,6 +112,11 @@
         .control-group select { width: 100%; padding: 14px; background: var(--bg-input); color: white; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 15px; font-weight: 500; outline: none; cursor: pointer; }
         .control-group select:focus { border-color: var(--primary); }
         
+        /* AI Box Styles (مەزنتر و دیارتر ل شوینا لێستا کەڤن) */
+        .ai-box { background: rgba(255, 215, 0, 0.1); padding: 25px 20px; border-radius: var(--radius-lg); border: 2px dashed #ffd700; transition: 0.3s; text-align: center; margin-bottom: 25px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
+        .ai-box:hover { background: rgba(255, 215, 0, 0.15); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+        .ai-box label { color: #ffd700; font-size: 16px; margin-bottom: 15px; }
+
         .ezcad-panel { background: var(--bg-input); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-top: 25px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
         .ezcad-panel h3 { color: var(--primary); margin-bottom: 18px; font-size: 16px; text-align: center; border-bottom: 1px dashed var(--border); padding-bottom: 10px;}
         .param-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; font-weight: 500;}
@@ -263,16 +272,10 @@
                     </select>
                 </div>
 
-                <div class="control-group">
-                    <label>🛠️ هەلبژارتنا ماددەی (Material Type)</label>
-                    <select id="mainMaterialSelect" onchange="applyAutoSettings()">
-                        <option value="none">-- ماددەی هەلبژێرە --</option>
-                        <option value="stainless_steel">مەعدەن (Stainless Steel)</option>
-                        <option value="gold_silver">زێر / زیڤ (Gold/Silver)</option>
-                        <option value="aluminum">ئەلەمینیۆم (Aluminum)</option>
-                        <option value="brass">مس / سفر (Brass)</option>
-                        <option value="leather">پێستی (Leather)</option>
-                    </select>
+                <div class="control-group ai-box">
+                    <label>🤖 ناسکرنا ماددەی ب زیرەکیا دەستکرد</label>
+                    <button class="btn btn-outline" id="aiDetectBtn" onclick="predictMaterial()" style="width: 100%; justify-content: center; border-color: #ffd700; color: #ffd700; font-size: 16px; padding: 12px;">🔍 وێنەی تەحلیل بکە (AI Scan)</button>
+                    <div id="aiStatus" style="font-size: 14px; margin-top: 15px; color: var(--text-light); font-weight: bold;">سەرەتا وێنەیەکێ هەلبژێرە</div>
                 </div>
 
                 <div class="control-group">
@@ -400,13 +403,16 @@
                         </tr>
                     </thead>
                     <tbody id="userTableBody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
+        // گوهۆڕکێ سەرەکی بۆ پاراستنا ماددەیێ ژ لایێ AI ڤە هاتییە دیتن
+        let currentDetectedMaterial = 'none';
+
         // ==========================================
         // 0. User Database (LocalStorage) Logic
         // ==========================================
@@ -421,16 +427,11 @@
             }
         }
 
-        function getUsers() {
-            return JSON.parse(localStorage.getItem('dastan_users'));
-        }
-
-        function saveUsers(usersArray) {
-            localStorage.setItem('dastan_users', JSON.stringify(usersArray));
-        }
+        function getUsers() { return JSON.parse(localStorage.getItem('dastan_users')); }
+        function saveUsers(usersArray) { localStorage.setItem('dastan_users', JSON.stringify(usersArray)); }
 
         // ==========================================
-        // 1. Session & Login Logic (پاراستنا سێشنێ)
+        // 1. Session & Login Logic
         // ==========================================
         function checkSession() {
             initDB();
@@ -444,12 +445,10 @@
         function checkLogin() {
             const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value;
-            
             const users = getUsers();
             const foundUser = users.find(u => u.username === user && u.password === pass);
             
             if (foundUser) {
-                // سەیڤکرنا بکارئینەری د ناڤ سیستەمی دا بۆ دەمێ ڕیفرێش کرنێ
                 localStorage.setItem('active_user', JSON.stringify(foundUser));
                 setupUIForUser(foundUser);
             } else {
@@ -477,23 +476,16 @@
         }
 
         function logout() {
-            // سڕینا سێشنی ب تەمامی دەمێ دەرکەفتنێ
             localStorage.removeItem('active_user');
-            
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('app-screen').style.display = 'none';
-            
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
             document.getElementById('error-msg').style.display = 'none';
-            
             document.body.classList.remove('admin-mode');
         }
 
         document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
-        
-        // دەمێ سایت ڤەدبیت، دێ سێشنی کۆنترۆل کەت
-        window.onload = checkSession;
 
         // ==========================================
         // 2. Mobile Mode Toggle Logic
@@ -516,25 +508,16 @@
         // 3. User Management (Admin Dashboard)
         // ==========================================
         const usersModal = document.getElementById('usersModal');
-        
-        function openUsersModal() { 
-            renderUserTable();
-            usersModal.classList.add('show'); 
-        }
+        function openUsersModal() { renderUserTable(); usersModal.classList.add('show'); }
         function closeUsersModal() { usersModal.classList.remove('show'); }
         
         function renderUserTable() {
             const users = getUsers();
             const tbody = document.getElementById('userTableBody');
             tbody.innerHTML = '';
-            
             users.forEach((u, index) => {
-                const roleBadge = u.role === 'admin' 
-                    ? `<span class="role-badge role-admin">👑 خودان</span>` 
-                    : `<span class="role-badge role-user">👤 بکارئینەر</span>`;
-                    
+                const roleBadge = u.role === 'admin' ? `<span class="role-badge role-admin">👑 خودان</span>` : `<span class="role-badge role-user">👤 بکارئینەر</span>`;
                 const isSuperAdmin = u.username === 'Dastan';
-                
                 let actions = '';
                 if (!isSuperAdmin) {
                     actions = `
@@ -542,18 +525,9 @@
                         <button class="action-btn" title="ئەدمین / بکارئینەر" onclick="toggleRole('${u.username}')">🔄</button>
                         <button class="action-btn" title="ژێبرن" onclick="deleteUser('${u.username}')">❌</button>
                     `;
-                } else {
-                    actions = `<span style="color: #aaa; font-size: 12px;">کۆنترۆلا سەرەکی</span>`;
-                }
+                } else { actions = `<span style="color: #aaa; font-size: 12px;">کۆنترۆلا سەرەکی</span>`; }
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight: bold;">${u.username}</td>
-                        <td style="font-family: monospace;">${u.password}</td>
-                        <td>${roleBadge}</td>
-                        <td style="text-align: center;">${actions}</td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td style="font-weight: bold;">${u.username}</td><td style="font-family: monospace;">${u.password}</td><td>${roleBadge}</td><td style="text-align: center;">${actions}</td></tr>`;
             });
         }
 
@@ -561,59 +535,112 @@
             const name = document.getElementById('newUsername').value.trim();
             const pass = document.getElementById('newPassword').value.trim();
             const role = document.getElementById('newRole').value;
-            
-            if (!name || !pass) {
-                alert("کەرەمکە ناڤ و پاسواردێ بنڤیسە!"); return;
-            }
-            
+            if (!name || !pass) { alert("کەرەمکە ناڤ و پاسواردێ بنڤیسە!"); return; }
             let users = getUsers();
-            if (users.find(u => u.username === name)) {
-                alert("ئەڤ ناڤە یێ هەی، ناڤەکێ دی هەلبژێرە!"); return;
-            }
-            
+            if (users.find(u => u.username === name)) { alert("ئەڤ ناڤە یێ هەی، ناڤەکێ دی هەلبژێرە!"); return; }
             users.push({ username: name, password: pass, role: role });
             saveUsers(users);
-            
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newPassword').value = '';
-            renderUserTable();
+            document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; renderUserTable();
         }
 
         function deleteUser(username) {
             if(confirm(`تۆ دڵنیایی دڤێت هەژمارا '${username}' بسڕی؟`)) {
-                let users = getUsers();
-                users = users.filter(u => u.username !== username);
-                saveUsers(users);
-                renderUserTable();
+                let users = getUsers(); users = users.filter(u => u.username !== username); saveUsers(users); renderUserTable();
             }
         }
 
         function toggleRole(username) {
-            let users = getUsers();
-            let user = users.find(u => u.username === username);
-            if (user) {
-                user.role = user.role === 'admin' ? 'user' : 'admin';
-                saveUsers(users);
-                renderUserTable();
-            }
+            let users = getUsers(); let user = users.find(u => u.username === username);
+            if (user) { user.role = user.role === 'admin' ? 'user' : 'admin'; saveUsers(users); renderUserTable(); }
         }
 
         function changePass(username) {
             let newPass = prompt(`پاسواردێ نووی بۆ '${username}' بنڤیسە:`);
             if (newPass && newPass.trim() !== '') {
-                let users = getUsers();
-                let user = users.find(u => u.username === username);
-                if (user) {
-                    user.password = newPass.trim();
-                    saveUsers(users);
-                    renderUserTable();
-                }
+                let users = getUsers(); let user = users.find(u => u.username === username);
+                if (user) { user.password = newPass.trim(); saveUsers(users); renderUserTable(); }
             }
         }
 
         // ==========================================
-        // 4. Before / After Slider Logic
+        // 4. AI Material Scanner & Settings Logic
         // ==========================================
+        const tmURL = ""; // لینکێ مۆدێلێ تە ل ڤێرە دابنێ دەمێ دروست دکەی
+
+        let aiModel, maxPredictions;
+
+        async function initAI() {
+            if (!tmURL || tmURL === "") return; // ئەگەر لینک نەبوو دێ چیتە سەر سیستەمێ تاقیکرنێ
+            try {
+                document.getElementById('aiStatus').innerText = "⏳ مۆدێل یێ بار دکەت...";
+                const modelURL = tmURL + "model.json";
+                const metadataURL = tmURL + "metadata.json";
+                aiModel = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = aiModel.getTotalClasses();
+                document.getElementById('aiStatus').innerText = "✅ زیرەکیا دەستکرد یا ئامادەیە";
+            } catch (error) {
+                document.getElementById('aiStatus').innerText = "❌ خەلەتی د بارکرنێ دا هەبوو";
+            }
+        }
+
+        async function predictMaterial() {
+            if (!originalImage) {
+                alert("کەرەمکە سەرەتا وێنەیێ ماددەی هەلبژێرە (Upload)!");
+                return;
+            }
+
+            // ئەگەر تە لینکێ Teachable Machine نەدابیت، دێ ب شێوەیێ (Simulation) کار کەت دا تاقی بکەی
+            if (!tmURL || tmURL === "") {
+                document.getElementById('aiStatus').innerText = "🔍 یێ وێنەی تەحلیل دکەت... (Simulation)";
+                
+                // ڕاوەستان بۆ ماوێ 1.5 چرکە بۆ جوانیێ
+                setTimeout(() => {
+                    const simulatedMats = ["stainless_steel", "gold_silver", "aluminum", "brass", "leather"];
+                    const randomMat = simulatedMats[Math.floor(Math.random() * simulatedMats.length)];
+                    
+                    let kuName = "";
+                    if(randomMat === "stainless_steel") kuName = "مەعدەن (Stainless Steel)";
+                    else if(randomMat === "gold_silver") kuName = "زێر / زیڤ (Gold/Silver)";
+                    else if(randomMat === "aluminum") kuName = "ئەلەمینیۆم (Aluminum)";
+                    else if(randomMat === "brass") kuName = "مس / سفر (Brass)";
+                    else if(randomMat === "leather") kuName = "پێستی (Leather)";
+
+                    currentDetectedMaterial = randomMat;
+                    document.getElementById('aiStatus').innerText = `🎯 هاتە دیتن: ${kuName} (Simulated 95%)`;
+                    applyAutoSettings();
+                }, 1500);
+                return;
+            }
+
+            // ئەگەر لینک یێ ڕاستەقینە هەبیت
+            if (!aiModel) await initAI();
+            document.getElementById('aiStatus').innerText = "🔍 یێ وێنەی تەحلیل دکەت...";
+            const prediction = await aiModel.predict(canvasBefore);
+            
+            let highestProb = 0;
+            let bestMatch = "";
+            for (let i = 0; i < maxPredictions; i++) {
+                if (prediction[i].probability > highestProb) {
+                    highestProb = prediction[i].probability;
+                    bestMatch = prediction[i].className.toLowerCase();
+                }
+            }
+
+            if (highestProb > 0.60) {
+                if (bestMatch.includes("steel") || bestMatch.includes("مەعدەن")) currentDetectedMaterial = "stainless_steel";
+                else if (bestMatch.includes("gold") || bestMatch.includes("silver") || bestMatch.includes("زێر")) currentDetectedMaterial = "gold_silver";
+                else if (bestMatch.includes("aluminum") || bestMatch.includes("ئەلەمینیۆم")) currentDetectedMaterial = "aluminum";
+                else if (bestMatch.includes("brass") || bestMatch.includes("مس")) currentDetectedMaterial = "brass";
+                else if (bestMatch.includes("leather") || bestMatch.includes("پێستی")) currentDetectedMaterial = "leather";
+                else currentDetectedMaterial = "none";
+                
+                document.getElementById('aiStatus').innerText = `🎯 هاتە دیتن: ${bestMatch} (${Math.round(highestProb * 100)}%)`;
+                applyAutoSettings();
+            } else {
+                document.getElementById('aiStatus').innerText = "🤷 نەهاتە ناسکرن ب باشی.";
+            }
+        }
+
         function updateCompareSlider() {
             const val = document.getElementById('compareSlider').value;
             document.getElementById('canvasAfter').style.clipPath = `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`;
@@ -645,6 +672,7 @@
                     ctxBefore.drawImage(img, 0, 0, width, height); 
                     processImage();
                     canvasBefore.style.backgroundColor = "#fff"; 
+                    document.getElementById('aiStatus').innerText = "ئامادەیە بۆ تەحلیلکرنێ";
                 }
                 img.src = event.target.result;
             }
@@ -652,12 +680,10 @@
         });
 
         function applyAutoSettings() {
-            const mat = document.getElementById('mainMaterialSelect').value;
             const wattage = parseInt(document.getElementById('laserWattage').value);
-            
             document.getElementById('ez-panel-title').innerText = `⚙️ ڕێکخستنێن زیرەک بۆ ${wattage}W`;
 
-            if(mat === 'none') {
+            if(currentDetectedMaterial === 'none') {
                 document.getElementById('ez-speed').innerText = "--- mm/s";
                 document.getElementById('ez-power').innerText = "--- %";
                 document.getElementById('ez-freq').innerText = "--- kHz";
@@ -667,7 +693,7 @@
                 return;
             }
 
-            let baseData = JSON.parse(JSON.stringify(mainMaterialData[mat]));
+            let baseData = JSON.parse(JSON.stringify(mainMaterialData[currentDetectedMaterial]));
             let calcPower = baseData.power;
             let calcSpeed = baseData.speed;
 
@@ -687,7 +713,7 @@
             
             document.getElementById('compareWrapper').style.backgroundColor = baseData.previewBg;
 
-            if(['gold_silver', 'brass', 'aluminum'].includes(mat)) {
+            if(['gold_silver', 'brass', 'aluminum'].includes(currentDetectedMaterial)) {
                 document.getElementById('contrast').value = 40; document.getElementById('brightness').value = 10;
                 document.getElementById('unsharpLevel').value = 30; document.getElementById('ditherMode').value = 'floyd';
             } else {
@@ -765,6 +791,11 @@
             const link = document.createElement('a'); link.download = 'DaSTaN7_Laser_Ready.png';
             link.href = canvasAfter.toDataURL('image/png'); link.click();
         }
+
+        window.addEventListener('load', () => {
+            checkSession();
+            if(tmURL && tmURL !== "") initAI();
+        });
 
         // ==========================================
         // 5. Hatch Info Modal Logic
