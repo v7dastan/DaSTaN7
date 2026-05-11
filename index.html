@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaSTaN 7 - Laser Engraving Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --bg-dark: #121212;
+            --bg-panel: #1e1e1e;
+            --text-light: #e0e0e0;
+            --border: #333;
+            
+            /* Modal Variables (Hatch Info) */
+            --modal-bg: #1e1e24;
+            --modal-primary: #00adb5;
+            --modal-text: #eeeeee;
+            --modal-muted: #aaaaaa;
+            --modal-box: rgba(255, 255, 255, 0.05);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-light); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* Login Screen */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(18, 18, 18, 0.95); display: flex; justify-content: center; align-items: center; z-index: 3000;
+        }
+        .login-box {
+            background: var(--bg-panel); padding: 40px; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+            text-align: center; width: 350px; border: 1px solid var(--border);
+        }
+        .login-box h1 { color: var(--primary); margin-bottom: 5px; font-size: 28px; }
+        .login-box p.subtitle { color: #888; margin-bottom: 25px; font-size: 14px; }
+        
+        .login-box input {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid var(--border);
+            background: #2a2a2a; color: white; font-size: 16px; text-align: center;
+        }
+        .login-box button {
+            width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 6px;
+            background: var(--primary); color: #000; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s;
+        }
+        .login-box button:hover { background: #00a8cc; }
+        .error-msg { color: #ff4d4d; font-size: 14px; margin-top: 10px; display: none; }
+
+        /* Contact Box in Login */
+        .contact-box {
+            margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .contact-box span { color: #aaa; font-size: 13px; font-weight: bold; margin-bottom: 5px; }
+        .contact-link {
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            text-decoration: none; color: var(--text-light); background: #2a2a2a;
+            padding: 10px; border-radius: 6px; font-size: 14px; border: 1px solid var(--border);
+            transition: all 0.3s ease; font-family: Tahoma, sans-serif; direction: ltr;
+        }
+        .contact-link:hover { border-color: var(--primary); color: var(--primary); background: #333; }
+        .contact-link.snapchat:hover { border-color: #fffc00; color: #fffc00; text-shadow: 0 0 5px rgba(255, 252, 0, 0.3); }
+
+        /* App Screen */
+        #app-screen { display: none; height: 100%; flex-direction: column; }
+        header { background: var(--bg-panel); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        header h1 { color: var(--primary); font-size: 24px; font-family: 'Segoe UI', sans-serif;}
+        .btn { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: #00a8cc; }
+        .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-left: 10px; }
+        .btn-outline:hover { background: rgba(0, 210, 255, 0.1); }
+
+        .main-content { display: flex; flex: 1; height: calc(100vh - 65px); }
+        
+        /* Sidebar */
+        .sidebar { width: 350px; background: var(--bg-panel); padding: 20px; border-left: 1px solid var(--border); overflow-y: auto; }
+        .control-group { margin-bottom: 20px; }
+        .control-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #aaa; font-size: 13px; }
+        .control-group input[type="range"] { width: 100%; cursor: pointer; }
+        .control-group select { width: 100%; padding: 10px; background: #2a2a2a; color: white; border: 1px solid var(--border); border-radius: 6px; }
+        
+        .ezcad-panel { background: #2a2a2a; padding: 15px; border-radius: 8px; border: 1px solid #444; margin-top: 20px; }
+        .ezcad-panel h3 { color: var(--primary); margin-bottom: 15px; font-size: 15px; text-align: center; }
+        .param-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .param-row span:last-child { color: var(--primary); font-weight: bold; }
+
+        /* Workspace */
+        .workspace { flex: 1; display: flex; padding: 20px; gap: 20px; background: #0a0a0a; }
+        .canvas-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-panel); border-radius: 8px; border: 1px solid var(--border); padding: 10px; }
+        .canvas-title { text-align: center; margin-bottom: 10px; font-weight: bold; color: #888; font-size: 16px; }
+        .canvas-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; background: #111; border-radius: 4px; }
+        canvas { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        .file-input-wrapper { text-align: center; margin-bottom: 20px; }
+        input[type="file"] { display: none; }
+        .file-label { background: #333; color: white; padding: 12px 20px; border-radius: 6px; cursor: pointer; display: inline-block; transition: 0.3s; width: 100%; text-align: center; font-weight: bold; }
+        .file-label:hover { background: #444; }
+
+        /* Hatch Info Modal Styles */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 2000;
+            justify-content: center; align-items: center; padding: 20px;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        
+        .modal-container {
+            background-color: var(--modal-bg); width: 100%; max-width: 700px; padding: 40px;
+            border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-top: 6px solid var(--modal-primary); position: relative;
+            max-height: 90vh; overflow-y: auto; transition: all 0.4s ease;
+        }
+
+        .close-btn {
+            position: absolute; top: 20px; left: 20px; font-size: 28px; color: var(--modal-muted);
+            cursor: pointer; transition: 0.3s; background: none; border: none; outline: none;
+        }
+        .close-btn:hover { color: #ff4d4d; }
+
+        .h-header { text-align: center; margin-bottom: 30px; }
+        .h-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--modal-primary); transition: color 0.4s ease; }
+        .h-header p { font-size: 15px; color: var(--modal-muted); direction: ltr; }
+
+        .h-form-group { margin-bottom: 25px; }
+        .h-form-group label { display: block; font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--modal-text); text-align: right; }
+        
+        .modal-container select, .modal-container input[type="text"] {
+            width: 100%; padding: 16px; font-size: 16px; font-weight: 500;
+            background-color: rgba(0,0,0,0.2); color: var(--modal-text);
+            border: 2px solid var(--modal-box); border-radius: 12px; outline: none; transition: all 0.3s ease;
+        }
+        .modal-container select { cursor: pointer; direction: ltr; appearance: auto; }
+        .modal-container select:focus, .modal-container input[type="text"]:focus { border-color: var(--modal-primary); }
+
+        .modal-container input[type="text"] {
+            color: var(--modal-primary); font-size: 20px; font-weight: 800; text-align: center;
+            direction: ltr; letter-spacing: 1px; border: 2px dashed var(--modal-primary);
+        }
+
+        .h-details-wrapper { display: none; opacity: 0; transform: translateY(15px); transition: all 0.5s ease; }
+        .h-details-wrapper.active { display: block; opacity: 1; transform: translateY(0); }
+
+        .h-info-card { background-color: var(--modal-box); border-radius: 16px; padding: 25px; border-right: 5px solid var(--modal-primary); transition: border-color 0.4s ease; }
+        .h-material-title { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 25px; direction: ltr; color: var(--modal-primary); border-bottom: 2px solid var(--modal-box); padding-bottom: 15px; transition: color 0.4s ease; }
+        
+        .h-info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(128, 128, 128, 0.2); }
+        .h-info-row:last-child { border-bottom: none; }
+        .h-label-group { display: flex; flex-direction: column; text-align: right; }
+        .h-label-ku { font-size: 16px; font-weight: 700; color: var(--modal-text); }
+        .h-label-en { font-size: 12px; color: var(--modal-muted); direction: ltr; text-align: right; }
+        .h-value-box { background-color: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: bold; color: var(--modal-primary); direction: ltr; transition: color 0.4s ease; }
+
+        .h-notes-section { margin-top: 20px; background-color: rgba(255, 0, 0, 0.05); border-right: 4px solid #e74c3c; padding: 15px 20px; border-radius: 10px; }
+        .h-notes-title { font-weight: 800; color: #e74c3c; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .h-notes-text { font-size: 15px; line-height: 1.6; direction: ltr; text-align: left; color: var(--modal-text); font-weight: 500; }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>DaSTaN 7</h1>
+            <p class="subtitle">Laser Engraving Studio</p>
+            
+            <input type="text" id="username" placeholder="ناڤێ بکارئینەری (Username)">
+            <input type="password" id="password" placeholder="پاسوارد (Password)">
+            <button onclick="checkLogin()">چوونە ژوور</button>
+            <p class="error-msg" id="error-msg">ناڤ یان پاسوارد خەلەتە!</p>
+            
+            <div class="contact-box">
+                <span>پەیوەندی کرن ب گەشەپێدەری ڤە:</span>
+                <a href="tel:07506887626" class="contact-link">
+                    📞 0750 688 7626
+                </a>
+                <a href="https://www.snapchat.com/add/dasta.n" target="_blank" class="contact-link snapchat">
+                    👻 dasta.n
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-screen">
+        <header>
+            <h1>DaSTaN 7 <span style="font-size: 14px; color: #888;">| Laser Machine 50W Studio</span></h1>
+            <div>
+                <button class="btn btn-outline" onclick="openHatchModal()">📋 پێزانینێن نەخشێ (Hatch Info)</button>
+                <button class="btn" onclick="saveImage()">سەیڤکرن (Save)</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="file-input-wrapper">
+                    <label class="file-label">
+                        هەلبژارتنا وێنەی (Upload)
+                        <input type="file" id="imageLoader" accept="image/*">
+                    </label>
+                </div>
+
+                <div class="control-group">
+                    <label>هەلبژارتنا ماددەی (Material Type)</label>
+                    <select id="mainMaterialSelect" onchange="applyAutoSettings()">
+                        <option value="none">-- ماددەی هەلبژێرە --</option>
+                        <option value="stainless_steel">مەعدەن (Stainless Steel)</option>
+                        <option value="gold_silver">زێر / زیڤ (Gold/Silver)</option>
+                        <option value="aluminum">ئەلەمینیۆم (Aluminum)</option>
+                        <option value="brass">مس / سفر (Brass)</option>
+                        <option value="leather">پێستی (Leather)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>شێوازێ لێزەرێ (Dithering Mode)</label>
+                    <select id="ditherMode" onchange="processImage()">
+                        <option value="floyd">خاڵ خاڵ (Floyd-Steinberg) - باشترین</option>
+                        <option value="threshold">ڕەش و سپی (Threshold)</option>
+                        <option value="grayscale">نۆرماڵ (Grayscale)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>تیژکرنا وێنەی (Unsharp Mask)</label>
+                    <input type="range" id="unsharpLevel" min="0" max="100" value="0" step="5" oninput="processImage()">
+                </div>
+
+                <div class="control-group">
+                    <label>ڕوونی (Brightness)</label>
+                    <input type="range" id="brightness" min="-100" max="100" value="0" oninput="processImage()">
+                </div>
+
+                <div class="control-group">
+                    <label>کونتراست (Contrast)</label>
+                    <input type="range" id="contrast" min="-100" max="100" value="0" oninput="processImage()">
+                </div>
+
+                <div class="ezcad-panel">
+                    <h3>⚙️ ڕێکخستنێن ب لەز بۆ 50W</h3>
+                    <div class="param-row"><span>Speed:</span> <span id="ez-speed">--- mm/s</span></div>
+                    <div class="param-row"><span>Power:</span> <span id="ez-power">--- %</span></div>
+                    <div class="param-row"><span>Frequency:</span> <span id="ez-freq">--- kHz</span></div>
+                    <div class="param-row"><span>Hatch:</span> <span id="ez-hatch">--- mm</span></div>
+                    <div class="param-row"><span>Passes:</span> <span id="ez-pass">---</span></div>
+                </div>
+            </div>
+
+            <div class="workspace">
+                <div class="canvas-container">
+                    <div class="canvas-title">Before (بەرێ)</div>
+                    <div class="canvas-wrapper"><canvas id="canvasBefore"></canvas></div>
+                </div>
+                <div class="canvas-container">
+                    <div class="canvas-title">After (پشتی)</div>
+                    <div class="canvas-wrapper" id="afterWrapper"><canvas id="canvasAfter"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="hatchModal">
+        <div class="modal-container" id="hatchContainer">
+            <button class="close-btn" onclick="closeHatchModal()">&times;</button>
+            <div class="h-header">
+                <h1 id="hMainTitle">پێزانینێن نەخشێ</h1>
+                <p>Ezcad 2 Fiber Laser Hatch Parameters</p>
+            </div>
+            
+            <div class="h-form-group">
+                <label>کەرەمکە ماددەیەکێ هەلبژێرە / Select Material:</label>
+                <select id="hatchMaterialSelect" onchange="updateHatchUI()">
+                    <option value="">-- هەلبژێرە (Select) --</option>
+                </select>
+            </div>
+
+            <div class="h-form-group">
+                <label>تاقیکرنا ڕەنگێ نڤیسینێ / Color Preview:</label>
+                <input type="text" value="DaSTaN 7" placeholder="ل ڤێرە بنڤیسە...">
+            </div>
+
+            <div class="h-details-wrapper" id="hDetailsWrapper">
+                <div class="h-info-card">
+                    <div class="h-material-title" id="hMTitle">Material Name</div>
+                    <div id="hCardContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. Login & App Control
+        // ==========================================
+        function checkLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            if (user === 'Dastan' && pass === '19971997') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'flex';
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+        document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
+
+        let originalImage = null;
+        const canvasBefore = document.getElementById('canvasBefore'); const ctxBefore = canvasBefore.getContext('2d');
+        const canvasAfter = document.getElementById('canvasAfter'); const ctxAfter = canvasAfter.getContext('2d', { willReadFrequently: true });
+
+        const mainMaterialData = {
+            stainless_steel: { speed: 800, power: 60, freq: 30, hatch: 0.05, pass: 1, previewBg: '#444' },
+            gold_silver: { speed: 500, power: 85, freq: 40, hatch: 0.03, pass: 5, previewBg: '#cca94b' },
+            aluminum: { speed: 1000, power: 45, freq: 30, hatch: 0.05, pass: 1, previewBg: '#222' },
+            brass: { speed: 400, power: 90, freq: 50, hatch: 0.03, pass: 3, previewBg: '#b5a642' },
+            leather: { speed: 1500, power: 25, freq: 30, hatch: 0.08, pass: 1, previewBg: '#5c3a21' }
+        };
+
+        // Load Image
+        document.getElementById('imageLoader').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    originalImage = img;
+                    let maxDim = 1200; let width = img.width; let height = img.height;
+                    if (width > maxDim || height > maxDim) { const ratio = Math.min(maxDim/width, maxDim/height); width = Math.round(width*ratio); height = Math.round(height*ratio); }
+                    canvasBefore.width = canvasAfter.width = width; canvasBefore.height = canvasAfter.height = height;
+                    ctxBefore.drawImage(img, 0, 0, width, height); processImage();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        function applyAutoSettings() {
+            const mat = document.getElementById('mainMaterialSelect').value;
+            if(mat === 'none') return;
+            const data = mainMaterialData[mat];
+            document.getElementById('ez-speed').innerText = data.speed + " mm/s";
+            document.getElementById('ez-power').innerText = data.power + " %";
+            document.getElementById('ez-freq').innerText = data.freq + " kHz";
+            document.getElementById('ez-hatch').innerText = data.hatch + " mm";
+            document.getElementById('ez-pass').innerText = data.pass;
+            document.getElementById('afterWrapper').style.backgroundColor = data.previewBg;
+
+            if(['gold_silver', 'brass', 'aluminum'].includes(mat)) {
+                document.getElementById('contrast').value = 40; document.getElementById('brightness').value = 10;
+                document.getElementById('unsharpLevel').value = 30; document.getElementById('ditherMode').value = 'floyd';
+            } else {
+                document.getElementById('contrast').value = 20; document.getElementById('brightness').value = 0;
+                document.getElementById('unsharpLevel').value = 10;
+            }
+            processImage();
+        }
+
+        // True Matrix Sharpen
+        function applySharpen(ctx, w, h, amount) {
+            if (amount <= 0) return;
+            const imgData = ctx.getImageData(0, 0, w, h); const src = imgData.data; const dst = new Uint8ClampedArray(src.length); const mix = amount / 100;
+            const weights = [ 0, -1, 0, -1, 5, -1, 0, -1, 0 ]; const side = Math.round(Math.sqrt(weights.length)); const halfSide = Math.floor(side / 2);
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    const dstOff = (y * w + x) * 4; let r = 0, g = 0, b = 0;
+                    for (let cy = 0; cy < side; cy++) {
+                        for (let cx = 0; cx < side; cx++) {
+                            const scy = Math.min(Math.max(y + cy - halfSide, 0), h - 1); const scx = Math.min(Math.max(x + cx - halfSide, 0), w - 1);
+                            const srcOff = (scy * w + scx) * 4; const wt = weights[cy * side + cx];
+                            r += src[srcOff] * wt; g += src[srcOff + 1] * wt; b += src[srcOff + 2] * wt;
+                        }
+                    }
+                    dst[dstOff] = src[dstOff] + (r - src[dstOff]) * mix; dst[dstOff + 1] = src[dstOff + 1] + (g - src[dstOff + 1]) * mix;
+                    dst[dstOff + 2] = src[dstOff + 2] + (b - src[dstOff + 2]) * mix; dst[dstOff + 3] = src[dstOff + 3];
+                }
+            }
+            imgData.data.set(dst); ctx.putImageData(imgData, 0, 0);
+        }
+
+        function processImage() {
+            if (!originalImage) return;
+            const brightness = parseInt(document.getElementById('brightness').value);
+            const contrast = parseInt(document.getElementById('contrast').value);
+            const unsharpLevel = parseInt(document.getElementById('unsharpLevel').value);
+            const ditherMode = document.getElementById('ditherMode').value;
+
+            ctxAfter.clearRect(0, 0, canvasAfter.width, canvasAfter.height);
+            ctxAfter.drawImage(canvasBefore, 0, 0);
+
+            if (unsharpLevel > 0) applySharpen(ctxAfter, canvasAfter.width, canvasAfter.height, unsharpLevel);
+
+            let imageData = ctxAfter.getImageData(0, 0, canvasAfter.width, canvasAfter.height); let data = imageData.data;
+            const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+            
+            for (let i = 0; i < data.length; i += 4) {
+                let gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
+                let newVal = factor * (gray - 128) + 128 + brightness;
+                newVal = Math.max(0, Math.min(255, newVal));
+                data[i] = data[i+1] = data[i+2] = newVal;
+            }
+
+            if (ditherMode === 'threshold') {
+                for (let i = 0; i < data.length; i += 4) { let v = data[i] > 128 ? 255 : 0; data[i] = data[i+1] = data[i+2] = v; }
+            } else if (ditherMode === 'floyd') {
+                let w = canvasAfter.width; let h = canvasAfter.height;
+                for (let y = 0; y < h; y++) {
+                    for (let x = 0; x < w; x++) {
+                        let i = (y * w + x) * 4; let oldPixel = data[i]; let newPixel = oldPixel < 128 ? 0 : 255;
+                        data[i] = data[i+1] = data[i+2] = newPixel; let quantError = oldPixel - newPixel;
+                        if (x + 1 < w) { data[i + 4] += quantError * 7 / 16; data[i + 5] += quantError * 7 / 16; data[i + 6] += quantError * 7 / 16; }
+                        if (y + 1 < h) {
+                            if (x - 1 >= 0) { data[i + w * 4 - 4] += quantError * 3 / 16; data[i + w * 4 - 3] += quantError * 3 / 16; data[i + w * 4 - 2] += quantError * 3 / 16; }
+                            data[i + w * 4] += quantError * 5 / 16; data[i + w * 4 + 1] += quantError * 5 / 16; data[i + w * 4 + 2] += quantError * 5 / 16;
+                            if (x + 1 < w) { data[i + w * 4 + 4] += quantError * 1 / 16; data[i + w * 4 + 5] += quantError * 1 / 16; data[i + w * 4 + 6] += quantError * 1 / 16; }
+                        }
+                    }
+                }
+            }
+            ctxAfter.putImageData(imageData, 0, 0);
+        }
+
+        function saveImage() {
+            if (!originalImage) { alert("هیڤیە سەرەتا وێنەیەکێ دابنە"); return; }
+            const link = document.createElement('a'); link.download = 'DaSTaN7_Laser_Ready.png';
+            link.href = canvasAfter.toDataURL('image/png'); link.click();
+        }
+
+        // ==========================================
+        // 2. Hatch Info Modal Logic
+        // ==========================================
+        const hatchModal = document.getElementById('hatchModal');
+        function openHatchModal() { hatchModal.classList.add('show'); }
+        function closeHatchModal() { hatchModal.classList.remove('show'); }
+        window.onclick = function(event) { if (event.target == hatchModal) closeHatchModal(); }
+
+        const hatchData = [
+            { "Name": "Aluminum General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Rinse with Water)" },
+            { "Name": "Aluminum Dark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,002", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Rinse with Water)" },
+            { "Name": "Aluminum White Finish", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe clean with dry microfiber cloth - oil will stain, may rinse with water" },
+            { "Name": "Aluminum Brilliance Laser Ink", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Very sensitive, will take some work to get your settings just right." },
+            { "Name": "Aluminum Cut", "Hatch Icon": "CUT", "Hatch Pattern": "CUT", "Active Hatches": "CUT", "Line Distance": "CUT", "Notes": "Cut with .001mm Diameter and Distance" },
+            { "Name": "Brass General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Oil)" },
+            { "Name": "Brass Black Deep", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Use toothbrush and apply generous oil to remove debris. Brush with grain." },
+            { "Name": "Brass Photo Details", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Works best with a brass general base pass." },
+            { "Name": "Electro Plating", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Removes Electro Plating to engrave base metal underneath" },
+            { "Name": "Copper General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Use toothbrush and apply generous oil to remove debris. Brush with grain." },
+            { "Name": "Zinc Core Darken", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "For darkening core alloys, often those found under electroplating" },
+            { "Name": "Pmag Tan", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,05", "Notes": "Wipe with Clean Dry Microfiber Cloth" },
+            { "Name": "Pmag Brown", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,1", "Notes": "Wipe with Clean Dry Microfiber Cloth" },
+            { "Name": "Pmag Gray", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,08", "Notes": "Wipe with Clean Dry Microfiber Cloth" },
+            { "Name": "Polyester Sheet Cut", "Hatch Icon": "CUT", "Hatch Pattern": "CUT", "Active Hatches": "CUT", "Line Distance": "CUT", "Notes": "Cuts 99% of the way through, then just pop out cut outs with your finger!" },
+            { "Name": "Leather Gentle", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Leather Gentle Low KHZ", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe clean with a clean dry microfiber cloth for all." },
+            { "Name": "Leather General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Run as many passes as needed to break through the surface" },
+            { "Name": "Leather General Low KHZ", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Stop and move to a lower power setting after breaking through" },
+            { "Name": "Leather Resistant", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "if you experience excessive burning. IE, 2 Pass Resistant -> 2 Pass Gentle" },
+            { "Name": "Leather Resistant Low KHZ", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Leather Large Projects", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Pine Wood Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 0°", "Line Distance": ",2", "Notes": "Sand as needed" },
+            { "Name": "Steel General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Apply 3-in-1 Oil, Brush generously, (Optionally clean with degreaser)" },
+            { "Name": "Steel Deep Engrave", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,01", "Notes": "Finish with Steel General, Anneal or Steel White Finish" },
+            { "Name": "Steel White Finish", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe clean with dry microfiber cloth - oil will stain, not weather resistant" },
+            { "Name": "Steel Z-Mark Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Defocus laser 1-3mm AWAY from material for best results" },
+            { "Name": "Steel Anneal General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Helps protect the steel by heating it after engraving, has a shiny blue rainbow effect. Oil when complete." },
+            { "Name": "Steel Powder Coat Touch Free Curved", "Hatch Pattern": "Standard", "Active Hatches": "1: 0°", "Line Distance": "0,025", "Notes": "For use without rotary tool on curves, same requirements as above. +3mm focus" },
+            { "Name": "Steel Powder Coat Removal Rotary", "Hatch Pattern": "Standard", "Active Hatches": "1: 0°", "Line Distance": "0,02", "Notes": "For use with rotary tool, same requirements as above. +5.5mm focus" },
+            { "Name": "Heavy Powder Coat Photos", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "No base pass. Engrave directly into the coating. Will be darker than the engraved area, invert as needed." },
+            { "Name": "Titanium General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Oil)" },
+            { "Name": "Titanium Z-Mark Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Defocus laser 1-3mm AWAY from material for best results" },
+            { "Name": "Titanium Anneal General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Helps protect the steel by heating it after engraving, turns titanium GOLD. Oil when complete." },
+            { "Name": "Silver General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Yellow color is natural fiber laser result, your settings are correct." },
+            { "Name": "Silver Dark Deep", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Only works on solid silver, silver plating is too thin to stand up to this mark." },
+            { "Name": "Silver Satin Finish", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,026", "Notes": "Very smooth silver finish on silver" },
+            { "Name": "Silver Photo Base", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Use for photo silhouette background FIRST" },
+            { "Name": "Silver Photo White", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Use for photo silhouette background SECOND" },
+            { "Name": "Silver Photo Finish", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Run your actual photo on top of your base with this pass. Make sure to check pixel power and enable mark low." },
+            { "Name": "Slate Light Grey", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.1", "Notes": "No matter how deep or how many passes you run it will stay light grey, great for adding depth to your slate." },
+            { "Name": "Slate White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.1", "Notes": "Slate White must be DEFOCUSED 3mm closer to the slate to work." },
+            { "Name": "Slate Tan", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.1", "Notes": "Run multiple times to achieve a cool \"glass\" effect, but careful, it's non reversible." },
+            { "Name": "Black Granite Gray", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Run as many times as you want for added depth, gets less efficient over time though." },
+            { "Name": "14K White Gold Base", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K White Gold Cleanup", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K White Gold Anneal White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K White Gold Gold Sparkle", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "14K White Gold Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "14K White Gold Photo Base", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "14K White Gold Photo White", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "14K White Gold Photo Details", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "14K Rose Gold Base", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K Rose Gold Cleanup", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K Rose Gold Bright", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K Rose Gold Medium", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "14K Rose Gold Dark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "10-14K Yellow Gold Base", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "10-14K Yellow Gold Cleanup", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "10-14K Yellow Gold Bright", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "10-14K Yellow Gold Medium", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "10-14K Yellow Gold Dark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "10-14K Y/R Gold Photo Base", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "10-14K Y/R Gold Photo Cleanup", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "10-14K Y/R Gold Photo Details", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "10-14K Gold CUT", "Hatch Icon": "CUT", "Hatch Pattern": "CUT", "Active Hatches": "CUT", "Line Distance": "CUT", "Notes": "Turn on WOBBLE - .3 Diameter - .1 Distance, run as needed until you cut through." },
+            { "Name": "EXPERIMENTAL" },
+            { "Name": "ABS General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "ABS Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "ABS White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Black Delrin Tan Mark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Glock Polymer Stippling", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Glock Polymer Engrave", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "CPVC White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Kydex", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Tin", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Pewter Gray", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Pewter Shiny Silver", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Granite General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Rocks and Stones General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Browning Firearm Composite", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Golf Ball Experimental", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Glass", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,01", "Notes": "Place steel behind glass, focus laser to steel, place glass on top, reverse image and engrave." },
+            { "Name": "1 Layer Cerkote Remove", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,01", "Notes": "Place steel behind glass, focus laser to steel, place glass on top, reverse image and engrave." },
+            { "Name": "White ABS Gray", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,08", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "ABS High Frequency", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,1", "Notes": "Potentially dangerous gas emmissons - handle with care." }
+        ];
+
+        const hatchSelect = document.getElementById("hatchMaterialSelect");
+        hatchData.forEach((item, index) => {
+            let option = document.createElement("option"); option.value = index; option.textContent = item.Name;
+            hatchSelect.appendChild(option);
+        });
+
+        function applyModalTheme(materialName) {
+            const root = document.documentElement; 
+            const name = materialName.toLowerCase();
+            
+            if (name === "") { root.style.setProperty('--modal-primary', '#00adb5'); return; }
+
+            if (name.includes('gold')) { root.style.setProperty('--modal-primary', '#ffd700'); } 
+            else if (name.includes('silver') || name.includes('steel') || name.includes('aluminum') || name.includes('titanium') || name.includes('tin') || name.includes('pewter')) { root.style.setProperty('--modal-primary', '#b0bec5'); } 
+            else if (name.includes('brass') || name.includes('copper') || name.includes('zinc')) { root.style.setProperty('--modal-primary', '#e67e22'); } 
+            else if (name.includes('leather') || name.includes('wood')) { root.style.setProperty('--modal-primary', '#d35400'); } 
+            else if (name.includes('abs') || name.includes('pmag') || name.includes('polymer') || name.includes('kydex') || name.includes('delrin') || name.includes('cpvc')) { root.style.setProperty('--modal-primary', '#00d2ff'); } 
+            else if (name.includes('slate') || name.includes('granite') || name.includes('stone') || name.includes('glass')) { root.style.setProperty('--modal-primary', '#95a5a6'); } 
+            else { root.style.setProperty('--modal-primary', '#00adb5'); }
+        }
+
+        function updateHatchUI() {
+            const index = hatchSelect.value;
+            const detailsWrapper = document.getElementById("hDetailsWrapper");
+            const cardContent = document.getElementById("hCardContent");
+            const mTitle = document.getElementById("hMTitle");
+
+            if (index === "") { detailsWrapper.classList.remove("active"); applyModalTheme(""); return; }
+
+            const item = hatchData[index];
+            applyModalTheme(item.Name);
+            mTitle.textContent = item.Name;
+
+            let html = "";
+            if (item["Hatch Icon"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">ئایکۆنێ نەخشێ</span><span class="h-label-en">Hatch Icon</span></div><div class="h-value-box">${item["Hatch Icon"]}</div></div>`;
+            if (item["Hatch Pattern"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">شێوازێ نەخشێ</span><span class="h-label-en">Hatch Pattern</span></div><div class="h-value-box">${item["Hatch Pattern"]}</div></div>`;
+            if (item["Active Hatches"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">نەخشێن چالاک</span><span class="h-label-en">Active Hatches</span></div><div class="h-value-box">${item["Active Hatches"]}</div></div>`;
+            if (item["Line Distance"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">دویراتیا هێلان</span><span class="h-label-en">Line Distance</span></div><div class="h-value-box">${item["Line Distance"]}</div></div>`;
+            if (item["Notes"]) html += `<div class="h-notes-section"><div class="h-notes-title"><span>تێبینی</span><span style="font-size: 12px; color: #c0392b;">Notes</span></div><div class="h-notes-text">${item["Notes"]}</div></div>`;
+
+            cardContent.innerHTML = html;
+            detailsWrapper.classList.add("active");
+        }
+    </script>
+</body>
+</html>
