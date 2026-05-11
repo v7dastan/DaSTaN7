@@ -80,19 +80,21 @@
 
         /* App Screen */
         #app-screen { display: none; height: 100%; flex-direction: column; }
-        header { background: var(--bg-panel); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        header { background: var(--bg-panel); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 15px;}
         .header-title-box { display: flex; flex-direction: column; }
         header h1 { color: var(--primary); font-size: 24px; font-family: 'Segoe UI', sans-serif; font-weight: 800; margin-bottom: 5px;}
         .user-status-area { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
         #welcomeMessage { color: #fff; font-size: 14px; font-weight: 700; background: var(--bg-input); padding: 4px 12px; border-radius: 20px; display: inline-block; border: 1px solid var(--primary); box-shadow: 0 0 10px rgba(0, 210, 255, 0.1); }
         
-        .header-buttons { display: flex; gap: 10px; }
+        .header-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
         .btn { background: var(--primary); color: #000; border: none; padding: 10px 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 14px; display: flex; align-items: center; gap: 6px; white-space: nowrap;}
         .btn:hover { background: var(--primary-hover); }
         .btn-outline { background: rgba(0, 210, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); }
         .btn-outline:hover { background: rgba(0, 210, 255, 0.2); }
         .btn-warning { border-color: #f39c12; color: #f39c12; background: transparent; }
         .btn-warning:hover { background: rgba(243, 156, 18, 0.1); }
+        .btn-danger { background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid #e74c3c; }
+        .btn-danger:hover { background: #e74c3c; color: #fff; }
 
         .main-content { display: flex; flex: 1; height: calc(100vh - 80px); overflow: hidden; }
         
@@ -133,8 +135,8 @@
         body.mobile-mode header { flex-direction: column; padding: 15px; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
         body.mobile-mode .header-title-box { align-items: center; }
         body.mobile-mode header h1 { font-size: 22px; }
-        body.mobile-mode .header-buttons { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; justify-content: center;}
-        body.mobile-mode .btn { justify-content: center; padding: 10px; font-size: 12px; }
+        body.mobile-mode .header-buttons { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;}
+        body.mobile-mode .btn { justify-content: center; padding: 10px; font-size: 12px; flex: 1 1 calc(33% - 10px); }
         body.mobile-mode .main-content { flex-direction: column; height: auto; overflow: visible; }
         body.mobile-mode .workspace { order: 1; padding: 10px; background: #000; height: 450px; flex: none; width: 100%; }
         body.mobile-mode .canvas-container { border-radius: 0; border: none; padding: 0; box-shadow: none; background: transparent; height: 100%;}
@@ -149,9 +151,9 @@
             header { flex-direction: column; padding: 15px; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
             .header-title-box { align-items: center; }
             header h1 { font-size: 22px; }
-            .header-buttons { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .header-buttons { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
             .header-buttons #viewToggleBtn { display: none; }
-            .btn { justify-content: center; padding: 12px; font-size: 13px; }
+            .btn { justify-content: center; padding: 10px; font-size: 12px; flex: 1 1 calc(45% - 10px); }
             .main-content { flex-direction: column; height: auto; overflow: visible; }
             .workspace { order: 1; padding: 10px; background: #000; height: 400px; flex: none; width: 100%; }
             .canvas-container { border-radius: 0; border: none; padding: 0; box-shadow: none; background: transparent; height: 100%;}
@@ -201,8 +203,8 @@
         .action-btn { background: none; border: none; cursor: pointer; font-size: 16px; margin-left: 8px; transition: 0.3s;}
         .action-btn:hover { transform: scale(1.2); }
         .add-user-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px; }
-        .flex-row { display: flex; gap: 10px; align-items: flex-end;}
-        .flex-row > div { flex: 1; }
+        .flex-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;}
+        .flex-row > div { flex: 1; min-width: 120px; }
     </style>
 </head>
 <body>
@@ -239,6 +241,7 @@
                 <button class="btn btn-outline btn-warning" id="viewToggleBtn" onclick="toggleViewMode()">📱 مۆبایل</button>
                 <button class="btn btn-outline" onclick="openHatchModal()">📋 پێزانینێن نەخشێ</button>
                 <button class="btn" onclick="saveImage()">💾 سەیڤکرن</button>
+                <button class="btn btn-danger" onclick="logout()">🚪 دەرکەفتن</button>
             </div>
         </header>
 
@@ -407,11 +410,9 @@
         // ==========================================
         // 0. User Database (LocalStorage) Logic
         // ==========================================
-        // ئەڤە دێ یوزەران د ناڤ وێبگەڕی دا سەیڤ کەت
         function initDB() {
             let users = localStorage.getItem('dastan_users');
             if (!users) {
-                // داتابەیسێ بنەڕەتی ئەگەر ڤالا بیت
                 const defaultUsers = [
                     { username: 'Dastan', password: '19971997', role: 'admin' },
                     { username: 'lora', password: 'dastan1', role: 'user' }
@@ -419,7 +420,6 @@
                 localStorage.setItem('dastan_users', JSON.stringify(defaultUsers));
             }
         }
-        initDB();
 
         function getUsers() {
             return JSON.parse(localStorage.getItem('dastan_users'));
@@ -430,7 +430,73 @@
         }
 
         // ==========================================
-        // 1. Mobile Mode Toggle Logic
+        // 1. Session & Login Logic (پاراستنا سێشنێ)
+        // ==========================================
+        function checkSession() {
+            initDB();
+            const activeUserStr = localStorage.getItem('active_user');
+            if (activeUserStr) {
+                const activeUser = JSON.parse(activeUserStr);
+                setupUIForUser(activeUser);
+            }
+        }
+
+        function checkLogin() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+            
+            const users = getUsers();
+            const foundUser = users.find(u => u.username === user && u.password === pass);
+            
+            if (foundUser) {
+                // سەیڤکرنا بکارئینەری د ناڤ سیستەمی دا بۆ دەمێ ڕیفرێش کرنێ
+                localStorage.setItem('active_user', JSON.stringify(foundUser));
+                setupUIForUser(foundUser);
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function setupUIForUser(user) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'flex';
+            
+            if (user.role === 'admin') {
+                document.body.classList.add('admin-mode');
+                document.getElementById('welcomeMessage').innerText = `بۆردێ تایبەت یێ ${user.username}`;
+                document.getElementById('welcomeMessage').style.borderColor = "#ffd700";
+                document.getElementById('welcomeMessage').style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.3)";
+                document.getElementById('usersAdminBtn').style.display = 'flex';
+            } else {
+                document.body.classList.remove('admin-mode');
+                document.getElementById('welcomeMessage').innerText = `👋 بخێرهاتی ${user.username}`;
+                document.getElementById('welcomeMessage').style.borderColor = "var(--primary)";
+                document.getElementById('welcomeMessage').style.boxShadow = "0 0 10px rgba(0, 210, 255, 0.1)";
+                document.getElementById('usersAdminBtn').style.display = 'none';
+            }
+        }
+
+        function logout() {
+            // سڕینا سێشنی ب تەمامی دەمێ دەرکەفتنێ
+            localStorage.removeItem('active_user');
+            
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('app-screen').style.display = 'none';
+            
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('error-msg').style.display = 'none';
+            
+            document.body.classList.remove('admin-mode');
+        }
+
+        document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
+        
+        // دەمێ سایت ڤەدبیت، دێ سێشنی کۆنترۆل کەت
+        window.onload = checkSession;
+
+        // ==========================================
+        // 2. Mobile Mode Toggle Logic
         // ==========================================
         let isMobileMode = false;
         function toggleViewMode() {
@@ -445,40 +511,6 @@
             }
             setTimeout(updateCompareSlider, 100);
         }
-
-        // ==========================================
-        // 2. Login & Dynamic Admin Logic
-        // ==========================================
-        function checkLogin() {
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value;
-            
-            const users = getUsers();
-            const foundUser = users.find(u => u.username === user && u.password === pass);
-            
-            if (foundUser) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app-screen').style.display = 'flex';
-                
-                if (foundUser.role === 'admin') {
-                    // چالاککرنا شێوازێ تایبەت یێ ئەدمینی
-                    document.body.classList.add('admin-mode');
-                    document.getElementById('welcomeMessage').innerText = `بۆردێ تایبەت یێ ${foundUser.username}`;
-                    document.getElementById('welcomeMessage').style.borderColor = "#ffd700";
-                    document.getElementById('welcomeMessage').style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.3)";
-                    
-                    // نیشاندانا دوگمەیا بڕێڤەبرنا یوزەران
-                    document.getElementById('usersAdminBtn').style.display = 'flex';
-                } else {
-                    // شێوازێ نۆرماڵ بۆ بکارئینەرێن دی
-                    document.body.classList.remove('admin-mode');
-                    document.getElementById('welcomeMessage').innerText = `👋 بخێرهاتی ${foundUser.username}`;
-                }
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-            }
-        }
-        document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
 
         // ==========================================
         // 3. User Management (Admin Dashboard)
@@ -501,7 +533,6 @@
                     ? `<span class="role-badge role-admin">👑 خودان</span>` 
                     : `<span class="role-badge role-user">👤 بکارئینەر</span>`;
                     
-                // دا کو داستان ب خۆ نەشێت ئەکاونتێ خۆ ژێببەت یان ئەدمینیێ ژ خۆ ڤەکەت
                 const isSuperAdmin = u.username === 'Dastan';
                 
                 let actions = '';
@@ -594,7 +625,6 @@
         const canvasBefore = document.getElementById('canvasBefore'); const ctxBefore = canvasBefore.getContext('2d');
         const canvasAfter = document.getElementById('canvasAfter'); const ctxAfter = canvasAfter.getContext('2d', { willReadFrequently: true });
 
-        // Base Data for 50W
         const mainMaterialData = {
             stainless_steel: { speed: 800, power: 60, freq: 30, hatch: 0.05, pass: 1, previewBg: '#444' },
             gold_silver: { speed: 500, power: 85, freq: 40, hatch: 0.03, pass: 5, previewBg: '#cca94b' },
@@ -621,7 +651,6 @@
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        // ⚡ Smart Auto Settings based on Wattage and Material
         function applyAutoSettings() {
             const mat = document.getElementById('mainMaterialSelect').value;
             const wattage = parseInt(document.getElementById('laserWattage').value);
@@ -668,7 +697,6 @@
             processImage();
         }
 
-        // Image Processing Tools
         function applySharpen(ctx, w, h, amount) {
             if (amount <= 0) return;
             const imgData = ctx.getImageData(0, 0, w, h); const src = imgData.data; const dst = new Uint8ClampedArray(src.length); const mix = amount / 100;
