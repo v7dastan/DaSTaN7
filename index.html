@@ -23,25 +23,38 @@
             --modal-muted: #a1a1aa; --modal-box: rgba(255, 255, 255, 0.05);
         }
 
+        /* ========================================= */
+        /* ADMIN MODE (DASTAN) STYLES                */
+        /* ========================================= */
         body.admin-mode { --primary: #ffd700; --primary-hover: #ffea00; --bg-dark: #0a0a0a; --bg-panel: #111111; --border: #4a3b00; }
         body.admin-mode header { border-bottom: 2px solid var(--primary); box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15); }
         body.admin-mode .canvas-container { border: 1px solid var(--primary); box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); }
         body.admin-mode .workspace { background-image: linear-gradient(rgba(255,215,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.05) 1px, transparent 1px); background-size: 25px 25px; }
-        
         .admin-badge { display: none; background: linear-gradient(45deg, #ffd700, #f39c12); color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); animation: pulse-gold 2s infinite; }
         body.admin-mode .admin-badge { display: inline-block; }
         @keyframes pulse-gold { 0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); } 50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); } 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); } }
-        
+
+        /* ========================================= */
+        /* CO-ADMIN MODE (LORA) STYLES (خەمری)       */
+        /* ========================================= */
+        body.coadmin-mode { --primary: #c2185b; --primary-hover: #e91e63; --bg-dark: #120509; --bg-panel: #1c0a10; --border: #4d0a21; }
+        body.coadmin-mode header { border-bottom: 2px solid var(--primary); box-shadow: 0 4px 20px rgba(194, 24, 91, 0.15); }
+        body.coadmin-mode .canvas-container { border: 1px solid var(--primary); box-shadow: 0 0 20px rgba(194, 24, 91, 0.1); }
+        body.coadmin-mode .workspace { background-image: linear-gradient(rgba(194,24,91,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(194,24,91,0.05) 1px, transparent 1px); background-size: 25px 25px; }
+        .coadmin-badge { display: none; background: linear-gradient(45deg, #c2185b, #880e4f); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; box-shadow: 0 0 10px rgba(194, 24, 91, 0.5); animation: pulse-maroon 2s infinite; }
+        body.coadmin-mode .coadmin-badge { display: inline-block; }
+        @keyframes pulse-maroon { 0% { box-shadow: 0 0 5px rgba(194, 24, 91, 0.3); } 50% { box-shadow: 0 0 15px rgba(194, 24, 91, 0.8); } 100% { box-shadow: 0 0 5px rgba(194, 24, 91, 0.3); } }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-dark); color: var(--text-light); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: all 0.5s ease; }
         
-        /* Login Screen */
+        /* Login */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 15, 19, 0.98); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
         .login-box { background: var(--bg-panel); padding: 40px; border-radius: var(--radius-lg); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); text-align: center; width: 100%; max-width: 380px; border: 1px solid var(--border); }
         .login-box h1 { color: var(--primary); margin-bottom: 5px; font-size: 32px; font-weight: 800; letter-spacing: 1px; }
         .login-box p.subtitle { color: var(--text-muted); margin-bottom: 30px; font-size: 15px; }
         .login-box input { width: 100%; padding: 15px; margin: 10px 0; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-input); color: white; font-size: 16px; text-align: center; outline: none; transition: 0.3s; }
-        .login-box input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
+        .login-box input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(var(--primary), 0.2); }
         .login-box button { width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: var(--radius-md); background: var(--primary); color: #000; font-weight: 800; font-size: 17px; cursor: pointer; transition: 0.3s; }
         .login-box button:hover { background: var(--primary-hover); transform: translateY(-2px); }
         .error-msg { color: #ff4d4d; font-size: 14px; margin-top: 15px; display: none; }
@@ -79,12 +92,12 @@
         .control-group select:focus { border-color: var(--primary); }
         
         /* AI & Editor Box */
-        .ai-box { background: rgba(255, 215, 0, 0.1); padding: 25px 20px; border-radius: var(--radius-lg); border: 2px dashed #ffd700; transition: 0.3s; text-align: center; margin-bottom: 25px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
-        .ai-box:hover { background: rgba(255, 215, 0, 0.15); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
-        .ai-box label { color: #ffd700; font-size: 16px; margin-bottom: 15px; }
+        .ai-box { background: rgba(var(--primary), 0.1); padding: 25px 20px; border-radius: var(--radius-lg); border: 2px dashed var(--primary); transition: 0.3s; text-align: center; margin-bottom: 25px; box-shadow: 0 0 15px rgba(var(--primary), 0.1); }
+        .ai-box:hover { background: rgba(var(--primary), 0.15); box-shadow: 0 0 20px rgba(var(--primary), 0.2); }
+        .ai-box label { color: var(--primary); font-size: 16px; margin-bottom: 15px; }
         
-        .editor-box { background: rgba(0, 210, 255, 0.05); padding: 20px; border-radius: var(--radius-lg); border: 1px solid rgba(0, 210, 255, 0.2); margin-bottom: 25px; }
-        .editor-box h4 { color: var(--primary); margin-bottom: 15px; font-size: 15px; border-bottom: 1px dashed rgba(0,210,255,0.3); padding-bottom: 10px;}
+        .editor-box { background: rgba(var(--primary), 0.05); padding: 20px; border-radius: var(--radius-lg); border: 1px solid rgba(var(--primary), 0.2); margin-bottom: 25px; }
+        .editor-box h4 { color: var(--primary); margin-bottom: 15px; font-size: 15px; border-bottom: 1px dashed rgba(var(--primary),0.3); padding-bottom: 10px;}
         .checkbox-container { display: flex; flex-direction: column; gap: 12px; }
         .checkbox-container label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-light); font-size: 14px;}
         .checkbox-container input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
@@ -97,19 +110,36 @@
         .file-input-wrapper { margin-bottom: 25px; }
         input[type="file"] { display: none; }
         .file-label { background: var(--bg-input); color: white; padding: 15px; border-radius: var(--radius-md); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%; font-weight: 800; border: 2px dashed var(--border); transition: 0.3s; font-size: 16px;}
-        .file-label:hover { border-color: var(--primary); color: var(--primary); background: rgba(0, 210, 255, 0.05); }
+        .file-label:hover { border-color: var(--primary); color: var(--primary); background: rgba(var(--primary), 0.05); }
 
-        /* Workspace */
+        /* Workspace & Scroll Area for Zooming */
         .workspace { flex: 1; display: flex; padding: 25px; background: var(--bg-dark); overflow: hidden; justify-content: center; align-items: center; }
         .canvas-container { width: 100%; height: 100%; max-width: 1000px; display: flex; flex-direction: column; background: var(--bg-panel); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        
         .canvas-title { text-align: center; margin-bottom: 15px; font-weight: 800; color: var(--text-muted); font-size: 16px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;}
-        .compare-wrapper { position: relative; flex: 1; width: 100%; overflow: hidden; background: #111; border-radius: var(--radius-md); display: flex; justify-content: center; align-items: center; }
+        
+        /* Zoom Buttons Styles */
+        .zoom-controls { display: flex; gap: 5px; background: var(--bg-input); padding: 4px; border-radius: 8px; border: 1px solid var(--border); }
+        .zoom-controls button { background: transparent; border: none; color: white; cursor: pointer; font-size: 16px; width: 32px; height: 32px; border-radius: 6px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .zoom-controls button:hover { background: rgba(var(--primary), 0.2); color: var(--primary); }
+
+        .scroll-area { flex: 1; width: 100%; overflow: auto; background: #111; border-radius: var(--radius-md); position: relative; scrollbar-width: thin; scrollbar-color: var(--primary) #222;}
+        .scroll-area::-webkit-scrollbar { width: 8px; height: 8px; }
+        .scroll-area::-webkit-scrollbar-track { background: #111; border-radius: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+        .compare-wrapper { position: relative; min-width: 100%; min-height: 100%; width: 100%; height: 100%; background: transparent; display: flex; justify-content: center; align-items: center; transition: width 0.2s ease, height 0.2s ease; transform-origin: top left; }
         .compare-wrapper canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
         #canvasBefore { z-index: 1; pointer-events: none; }
         #canvasAfter { z-index: 2; pointer-events: none; clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
         .compare-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; opacity: 0; cursor: ew-resize; direction: ltr; }
         .slider-line { position: absolute; top: 0; left: 50%; width: 3px; height: 100%; background: var(--primary); z-index: 3; transform: translateX(-50%); pointer-events: none; box-shadow: 0 0 8px rgba(0,0,0,0.8); }
         .slider-thumb { position: absolute; top: 50%; left: 50%; width: 40px; height: 40px; background: var(--primary); color: #000; border-radius: 50%; z-index: 4; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 18px; pointer-events: none; box-shadow: 0 0 15px rgba(0, 0, 0, 0.8); border: 3px solid #fff; }
+
+        /* RGB Sliders custom colors */
+        #redChannel::-webkit-slider-thumb { background: #ff4d4d; }
+        #greenChannel::-webkit-slider-thumb { background: #2ecc71; }
+        #blueChannel::-webkit-slider-thumb { background: #3498db; }
 
         /* Mobile Mode */
         body.mobile-mode { overflow-y: auto; }
@@ -151,11 +181,11 @@
 
         /* Guide & Hatch UI */
         .guide-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px; }
-        .guide-result { background: rgba(0, 210, 255, 0.05); border-right: 4px solid var(--primary); padding: 15px; border-radius: 8px; margin-top: 20px; display: none; }
+        .guide-result { background: rgba(var(--primary), 0.05); border-right: 4px solid var(--primary); padding: 15px; border-radius: 8px; margin-top: 20px; display: none; }
         .guide-result.show { display: block; }
         .guide-result h4 { color: var(--primary); margin-bottom: 10px; font-size: 16px; }
         .guide-result p { font-size: 14px; line-height: 1.6; color: var(--text-light); margin-bottom: 15px;}
-        .param-tag { display: inline-block; background: #222; padding: 4px 8px; border-radius: 4px; font-family: monospace; color: #ffd700; margin: 2px; border: 1px solid #444;}
+        .param-tag { display: inline-block; background: #222; padding: 4px 8px; border-radius: 4px; font-family: monospace; color: var(--primary); margin: 2px; border: 1px solid #444;}
         .modal-container select, .modal-container input[type="text"], .modal-container input[type="password"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: #fff;}
         .modal-container label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #ccc;}
         .preview-input { color: var(--modal-primary); font-size: 20px; font-weight: 800; text-align: center; direction: ltr; letter-spacing: 2px; border: 2px dashed var(--modal-primary); }
@@ -181,6 +211,7 @@
         .user-table th { color: var(--modal-primary); font-weight: 800; }
         .role-badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
         .role-admin { background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px solid #ffd700; }
+        .role-coadmin { background: rgba(194, 24, 91, 0.2); color: #c2185b; border: 1px solid #c2185b; }
         .role-user { background: rgba(0, 210, 255, 0.2); color: #00d2ff; border: 1px solid #00d2ff; }
         .action-btn { background: none; border: none; cursor: pointer; font-size: 16px; margin-left: 8px; transition: 0.3s;}
         .action-btn:hover { transform: scale(1.2); }
@@ -212,6 +243,7 @@
                 <h1>DaSTaN 7 <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">| Laser Studio</span></h1>
                 <div class="user-status-area">
                     <span class="admin-badge" id="adminBadge">👑 خودانێ سایتێ (Admin)</span>
+                    <span class="coadmin-badge" id="coadminBadge">💜 هاریکارێ ڕێڤەبەری</span>
                     <span id="welcomeMessage"></span>
                 </div>
             </div>
@@ -245,7 +277,7 @@
 
                 <div class="control-group ai-box">
                     <label>🤖 ناسکرنا ماددەی ب زیرەکیا دەستکرد</label>
-                    <button class="btn btn-outline" id="aiDetectBtn" onclick="predictMaterial()" style="width: 100%; justify-content: center; border-color: #ffd700; color: #ffd700; font-size: 16px; padding: 12px;">🔍 وێنەی تەحلیل بکە (AI Scan)</button>
+                    <button class="btn btn-outline" id="aiDetectBtn" onclick="predictMaterial()" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px; border-color: var(--primary); color: var(--primary);">🔍 وێنەی تەحلیل بکە (AI Scan)</button>
                     <div id="aiStatus" style="font-size: 14px; margin-top: 15px; color: var(--text-light); font-weight: bold;">سەرەتا وێنەیەکێ هەلبژێرە</div>
                 </div>
 
@@ -297,6 +329,19 @@
                     <input type="range" id="contrast" min="-100" max="100" value="0" oninput="processImage()">
                 </div>
 
+                <div class="control-group">
+                    <label style="color: #ff4d4d;">🔴 ڕەنگێ سۆر (Red)</label>
+                    <input type="range" id="redChannel" min="-100" max="100" value="0" oninput="processImage()">
+                </div>
+                <div class="control-group">
+                    <label style="color: #2ecc71;">🟢 ڕەنگێ کەسک (Green)</label>
+                    <input type="range" id="greenChannel" min="-100" max="100" value="0" oninput="processImage()">
+                </div>
+                <div class="control-group">
+                    <label style="color: #3498db;">🔵 ڕەنگێ شین (Blue)</label>
+                    <input type="range" id="blueChannel" min="-100" max="100" value="0" oninput="processImage()">
+                </div>
+
                 <div class="ezcad-panel">
                     <h3 id="ez-panel-title">⚙️ ڕێکخستنێن زیرەک بۆ 50W</h3>
                     <div class="param-row"><span>Speed:</span> <span id="ez-speed">--- mm/s</span></div>
@@ -310,16 +355,25 @@
             <div class="workspace">
                 <div class="canvas-container">
                     <div class="canvas-title">
-                        <span style="color: var(--text-muted);">بەرێ (Original)</span>
-                        <span style="font-size: 13px; font-weight: normal; color: var(--primary);">↔ سلایدەرێ بکێشە</span>
-                        <span style="color: var(--primary);">پشتی (Preview)</span>
+                        <span style="color: var(--text-muted); width: 80px; text-align: right;">بەرێ</span>
+                        
+                        <div class="zoom-controls">
+                            <button onclick="changeZoom(1.2)" title="زووم بکە">➕</button>
+                            <button onclick="resetZoom()" title="نۆرماڵ">🔄</button>
+                            <button onclick="changeZoom(0.8)" title="زووم کێم بکە">➖</button>
+                        </div>
+                        
+                        <span style="color: var(--primary); width: 80px; text-align: left;">پشتی</span>
                     </div>
-                    <div class="compare-wrapper" id="compareWrapper">
-                        <canvas id="canvasBefore"></canvas>
-                        <canvas id="canvasAfter"></canvas>
-                        <div class="slider-line" id="sliderLine"></div>
-                        <div class="slider-thumb" id="sliderThumb">↔</div>
-                        <input type="range" min="0" max="100" value="50" class="compare-slider" id="compareSlider" oninput="updateCompareSlider()">
+                    
+                    <div class="scroll-area" id="scrollArea">
+                        <div class="compare-wrapper" id="compareWrapper">
+                            <canvas id="canvasBefore"></canvas>
+                            <canvas id="canvasAfter"></canvas>
+                            <div class="slider-line" id="sliderLine"></div>
+                            <div class="slider-thumb" id="sliderThumb">↔</div>
+                            <input type="range" min="0" max="100" value="50" class="compare-slider" id="compareSlider" oninput="updateCompareSlider()">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -330,7 +384,7 @@
         <div class="modal-container" style="max-width: 650px;">
             <button class="close-btn" onclick="closeGuideModal()">&times;</button>
             <div class="h-header">
-                <h1 style="color: #9b59b6;">📘 ڕێبەرێ ڕەنگ و ڕەقیێ</h1>
+                <h1 style="color: var(--primary);">📘 ڕێبەرێ ڕەنگ و ڕەقیێ</h1>
                 <p>Advanced Hatch Guide (EzCad 2)</p>
             </div>
             <div class="guide-box">
@@ -372,7 +426,7 @@
         <div class="modal-container" id="hatchContainer">
             <button class="close-btn" onclick="closeHatchModal()">&times;</button>
             <div class="h-header">
-                <h1 id="hMainTitle">پێزانینێن نەخشێ</h1>
+                <h1 id="hMainTitle" style="color: var(--primary);">پێزانینێن نەخشێ</h1>
                 <p>Ezcad 2 Fiber Laser Hatch Parameters</p>
             </div>
             <div class="h-form-group">
@@ -418,7 +472,14 @@
                 <div class="flex-row">
                     <div><label>ناڤێ بکارئینەری:</label><input type="text" id="newUsername" placeholder="ناڤ..."></div>
                     <div><label>پاسوارد:</label><input type="text" id="newPassword" placeholder="پاسوارد..."></div>
-                    <div><label>ئاست:</label><select id="newRole"><option value="user">بکارئینەر ئاسایی</option><option value="admin">خودان (Admin)</option></select></div>
+                    <div>
+                        <label>ئاست:</label>
+                        <select id="newRole">
+                            <option value="user">بکارئینەر ئاسایی</option>
+                            <option value="co-admin">هاریکار (Co-Admin)</option>
+                            <option value="admin">خودان (Admin)</option>
+                        </select>
+                    </div>
                 </div>
                 <button class="btn" style="width: 100%; margin-top: 15px; background: #ffd700; color: #000; justify-content: center;" onclick="addNewUser()">زێدەکرن</button>
             </div>
@@ -445,32 +506,29 @@
             let parsed = null;
             try { parsed = JSON.parse(usersStr); } catch(e) {}
             
-            // ئەگەر داتابەیس یێ تێکچووی بیت یان ڤالا بیت، دێ خۆ ڕاست کەتەڤە
             if (!parsed || !Array.isArray(parsed) || parsed.length === 0) { 
                 const defaultUsers = [
                     { username: 'Dastan', password: '19971997', role: 'admin' }, 
-                    { username: 'lora', password: 'dastan1', role: 'user' }
+                    { username: 'lora', password: 'dastan1', role: 'co-admin' } 
                 ]; 
                 localStorage.setItem('dastan_users', JSON.stringify(defaultUsers)); 
-            } 
+            } else {
+                let loraIndex = parsed.findIndex(u => u.username.toLowerCase() === 'lora');
+                if(loraIndex !== -1 && parsed[loraIndex].role === 'user') {
+                    parsed[loraIndex].role = 'co-admin';
+                    localStorage.setItem('dastan_users', JSON.stringify(parsed));
+                }
+            }
         }
 
-        function getUsers() { 
-            initDB(); // گەرەنتی دکەت کو داتابەیس یێ هەیە پێش وەرگرتنێ
-            return JSON.parse(localStorage.getItem('dastan_users')); 
-        }
-
+        function getUsers() { initDB(); return JSON.parse(localStorage.getItem('dastan_users')); }
         function saveUsers(usersArray) { localStorage.setItem('dastan_users', JSON.stringify(usersArray)); }
         
         function checkSession() { 
             initDB(); 
             const activeUserStr = localStorage.getItem('active_user'); 
             if (activeUserStr) { 
-                try {
-                    setupUIForUser(JSON.parse(activeUserStr)); 
-                } catch(e) {
-                    localStorage.removeItem('active_user');
-                }
+                try { setupUIForUser(JSON.parse(activeUserStr)); } catch(e) { localStorage.removeItem('active_user'); }
             } 
         }
 
@@ -480,7 +538,6 @@
             const pass = document.getElementById('password').value; 
             const users = getUsers() || [];
             
-            // Case-insensitive login بۆ ناڤی (گەر بچویک یان مەزن بنڤیسیت)
             const foundUser = users.find(u => u.username.toLowerCase() === user.toLowerCase() && u.password === pass); 
             
             if (foundUser) { 
@@ -495,13 +552,23 @@
             document.getElementById('login-screen').style.display = 'none'; 
             document.getElementById('app-screen').style.display = 'flex'; 
             
+            document.body.classList.remove('admin-mode', 'coadmin-mode');
+            document.getElementById('adminBadge').style.display = 'none';
+            document.getElementById('coadminBadge').style.display = 'none';
+
             if (user.role === 'admin') { 
                 document.body.classList.add('admin-mode'); 
                 document.getElementById('welcomeMessage').innerText = `بۆردێ تایبەت یێ ${user.username}`; 
                 document.getElementById('welcomeMessage').style.borderColor = "#ffd700"; 
+                document.getElementById('adminBadge').style.display = 'inline-block';
                 document.getElementById('usersAdminBtn').style.display = 'flex'; 
+            } else if (user.role === 'co-admin') {
+                document.body.classList.add('coadmin-mode'); 
+                document.getElementById('welcomeMessage').innerText = `بۆردێ هاریکار یێ ${user.username}`; 
+                document.getElementById('welcomeMessage').style.borderColor = "#c2185b"; 
+                document.getElementById('coadminBadge').style.display = 'inline-block';
+                document.getElementById('usersAdminBtn').style.display = 'none'; 
             } else { 
-                document.body.classList.remove('admin-mode'); 
                 document.getElementById('welcomeMessage').innerText = `👋 بخێرهاتی ${user.username}`; 
                 document.getElementById('welcomeMessage').style.borderColor = "var(--primary)"; 
                 document.getElementById('usersAdminBtn').style.display = 'none'; 
@@ -515,17 +582,34 @@
             document.getElementById('username').value = ''; 
             document.getElementById('password').value = ''; 
             document.getElementById('error-msg').style.display = 'none'; 
-            document.body.classList.remove('admin-mode'); 
+            document.body.classList.remove('admin-mode', 'coadmin-mode'); 
+            resetZoom(); 
         }
 
         document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
 
         // ==========================================
-        // 2. Interface Toggles & Sliders
+        // 2. Interface Toggles & Sliders & ZOOM
         // ==========================================
         let isMobileMode = false;
         function toggleViewMode() { isMobileMode = !isMobileMode; const btn = document.getElementById('viewToggleBtn'); if (isMobileMode) { document.body.classList.add('mobile-mode'); btn.innerHTML = '🖥️ کۆمپیوتەر'; } else { document.body.classList.remove('mobile-mode'); btn.innerHTML = '📱 مۆبایل'; } setTimeout(updateCompareSlider, 100); }
         function updateCompareSlider() { const val = document.getElementById('compareSlider').value; document.getElementById('canvasAfter').style.clipPath = `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`; document.getElementById('sliderLine').style.left = `${val}%`; document.getElementById('sliderThumb').style.left = `${val}%`; }
+
+        let currentZoom = 1;
+        function changeZoom(factor) {
+            currentZoom *= factor;
+            if(currentZoom < 1) currentZoom = 1; 
+            if(currentZoom > 5) currentZoom = 5; 
+            const cw = document.getElementById('compareWrapper');
+            cw.style.width = `${currentZoom * 100}%`;
+            cw.style.height = `${currentZoom * 100}%`;
+        }
+        function resetZoom() {
+            currentZoom = 1;
+            const cw = document.getElementById('compareWrapper');
+            cw.style.width = `100%`;
+            cw.style.height = `100%`;
+        }
 
         const canvasBefore = document.getElementById('canvasBefore'); const ctxBefore = canvasBefore.getContext('2d', { willReadFrequently: true });
         const canvasAfter = document.getElementById('canvasAfter'); const ctxAfter = canvasAfter.getContext('2d', { willReadFrequently: true });
@@ -533,7 +617,7 @@
         document.getElementById('imageLoader').addEventListener('change', function(e) {
             const reader = new FileReader();
             reader.onload = function(event) {
-                const img = new Image(); img.onload = function() { loadImageToCanvas(img); document.getElementById('aiStatus').innerText = "ئامادەیە بۆ تەحلیلکرنێ"; }
+                const img = new Image(); img.onload = function() { loadImageToCanvas(img); document.getElementById('aiStatus').innerText = "ئامادەیە بۆ تەحلیلکرنێ"; resetZoom(); }
                 img.src = event.target.result;
             }
             if(e.target.files.length > 0) reader.readAsDataURL(e.target.files[0]);
@@ -543,6 +627,12 @@
             originalImage = img; let maxDim = 1200; let width = img.width; let height = img.height;
             if (width > maxDim || height > maxDim) { const ratio = Math.min(maxDim/width, maxDim/height); width = Math.round(width*ratio); height = Math.round(height*ratio); }
             canvasBefore.width = canvasAfter.width = width; canvasBefore.height = canvasAfter.height = height;
+            
+            // Reset sliders
+            document.getElementById('redChannel').value = 0;
+            document.getElementById('greenChannel').value = 0;
+            document.getElementById('blueChannel').value = 0;
+            
             processImage(); 
         }
 
@@ -626,7 +716,7 @@
         function applyAutoSettings() {
             const mat = document.getElementById('mainMaterialSelect').value; const wattage = parseInt(document.getElementById('laserWattage').value);
             document.getElementById('ez-panel-title').innerText = `⚙️ ڕێکخستنێن زیرەک بۆ ${wattage}W`;
-            if(mat === 'none') { document.getElementById('ez-speed').innerText = "--- mm/s"; document.getElementById('ez-power').innerText = "--- %"; document.getElementById('ez-freq').innerText = "--- kHz"; document.getElementById('ez-hatch').innerText = "--- mm"; document.getElementById('ez-pass').innerText = "---"; document.getElementById('compareWrapper').style.backgroundColor = "#111"; return; }
+            if(mat === 'none') { document.getElementById('ez-speed').innerText = "--- mm/s"; document.getElementById('ez-power').innerText = "--- %"; document.getElementById('ez-freq').innerText = "--- kHz"; document.getElementById('ez-hatch').innerText = "--- mm"; document.getElementById('ez-pass').innerText = "---"; document.getElementById('compareWrapper').style.backgroundColor = "transparent"; return; }
             let baseData = JSON.parse(JSON.stringify(mainMaterialData[mat])); let calcPower = baseData.power; let calcSpeed = baseData.speed;
             if (wattage === 30) { calcPower = Math.min(100, Math.round(baseData.power * 1.4)); calcSpeed = Math.round(baseData.speed * 0.85); } else if (wattage === 20) { calcPower = Math.min(100, Math.round(baseData.power * 1.7)); calcSpeed = Math.round(baseData.speed * 0.70); }
             document.getElementById('ez-speed').innerText = calcSpeed + " mm/s"; document.getElementById('ez-power').innerText = calcPower + " %"; document.getElementById('ez-freq').innerText = baseData.freq + " kHz"; document.getElementById('ez-hatch').innerText = baseData.hatch + " mm"; document.getElementById('ez-pass').innerText = baseData.pass; document.getElementById('compareWrapper').style.backgroundColor = baseData.previewBg;
@@ -636,12 +726,25 @@
         }
 
         // ==========================================
-        // 5. Image Editor (HDR, Invert, Edge, Remove BG)
+        // 5. Image Editor (RGB, HDR, Invert, Edge, Remove BG)
         // ==========================================
         function processImage() {
             if (!originalImage) return;
-            const doMirror = document.getElementById('chkMirror').checked; const doInvert = document.getElementById('chkInvert').checked; const doEdge = document.getElementById('chkEdge').checked; const doRemoveWhite = document.getElementById('chkRemoveWhite').checked; const doHDR = document.getElementById('chkHDR').checked;
-            const brightness = parseInt(document.getElementById('brightness').value); const contrast = parseInt(document.getElementById('contrast').value); const unsharpLevel = parseInt(document.getElementById('unsharpLevel').value); const ditherMode = document.getElementById('ditherMode').value;
+            const doMirror = document.getElementById('chkMirror').checked; 
+            const doInvert = document.getElementById('chkInvert').checked; 
+            const doEdge = document.getElementById('chkEdge').checked; 
+            const doRemoveWhite = document.getElementById('chkRemoveWhite').checked; 
+            const doHDR = document.getElementById('chkHDR').checked;
+            
+            const brightness = parseInt(document.getElementById('brightness').value); 
+            const contrast = parseInt(document.getElementById('contrast').value); 
+            const unsharpLevel = parseInt(document.getElementById('unsharpLevel').value); 
+            const ditherMode = document.getElementById('ditherMode').value;
+            
+            // وەرگرتنا بهایێ سلایدەرێن RGB (ژ -100 تا 100) و لێکدانا ب 2.55 بۆ گونجاندنێ د گەل 255
+            const rOffset = parseInt(document.getElementById('redChannel').value) * 2.55;
+            const gOffset = parseInt(document.getElementById('greenChannel').value) * 2.55;
+            const bOffset = parseInt(document.getElementById('blueChannel').value) * 2.55;
 
             ctxBefore.clearRect(0, 0, canvasBefore.width, canvasBefore.height); ctxBefore.save();
             if (doMirror) { ctxBefore.translate(canvasBefore.width, 0); ctxBefore.scale(-1, 1); }
@@ -659,7 +762,20 @@
             for (let i = 0; i < data.length; i += 4) {
                 if (doRemoveWhite && data[i] > 240 && data[i+1] > 240 && data[i+2] > 240) { data[i+3] = 0; continue; }
                 if (data[i+3] === 0) continue; 
-                let gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2]; 
+                
+                // جێبەجێکرنا دەستکارییا RGB ل سەر هەر پیکسەلەکی
+                let r = data[i] + rOffset;
+                let g = data[i+1] + gOffset;
+                let b = data[i+2] + bOffset;
+                
+                // ڕێگریکرن ژ دەربازبوونا ڕەنگی ژ 0 یان 255
+                r = Math.max(0, Math.min(255, r));
+                g = Math.max(0, Math.min(255, g));
+                b = Math.max(0, Math.min(255, b));
+
+                // ڤەگۆڕین بۆ ڕەش و سپی (Grayscale) پشتی دەستکارییا ڕەنگان
+                let gray = 0.299 * r + 0.587 * g + 0.114 * b; 
+                
                 if (doHDR) { gray = 255 * Math.pow(gray / 255, 0.75); }
                 let newVal = factor * (gray - 128) + 128 + brightness;
                 newVal = Math.max(0, Math.min(255, newVal));
@@ -686,6 +802,7 @@
                 }
             }
             ctxAfter.putImageData(imgData, 0, 0);
+            
             ctxBefore.clearRect(0,0, canvasBefore.width, canvasBefore.height); ctxBefore.save();
             if (doMirror) { ctxBefore.translate(canvasBefore.width, 0); ctxBefore.scale(-1, 1); }
             ctxBefore.drawImage(originalImage, 0, 0, canvasBefore.width, canvasBefore.height); ctxBefore.restore();
@@ -824,15 +941,19 @@
         hatchData.forEach((item, index) => { let option = document.createElement("option"); option.value = index; option.textContent = item.Name; hatchSelect.appendChild(option); });
 
         function applyModalTheme(materialName) {
-            const root = document.documentElement; const name = materialName.toLowerCase(); const isAdmin = document.body.classList.contains('admin-mode');
-            if (name === "") { root.style.setProperty('--modal-primary', isAdmin ? '#ffd700' : '#00adb5'); return; }
+            const root = document.documentElement; const name = materialName.toLowerCase(); 
+            const isAdmin = document.body.classList.contains('admin-mode');
+            const isCoAdmin = document.body.classList.contains('coadmin-mode');
+            const defaultColor = isAdmin ? '#ffd700' : (isCoAdmin ? '#c2185b' : '#00adb5');
+
+            if (name === "") { root.style.setProperty('--modal-primary', defaultColor); return; }
             if (name.includes('gold')) { root.style.setProperty('--modal-primary', '#ffd700'); } 
             else if (name.includes('silver') || name.includes('steel') || name.includes('aluminum') || name.includes('titanium') || name.includes('tin') || name.includes('pewter')) { root.style.setProperty('--modal-primary', '#b0bec5'); } 
             else if (name.includes('brass') || name.includes('copper') || name.includes('zinc')) { root.style.setProperty('--modal-primary', '#e67e22'); } 
             else if (name.includes('leather') || name.includes('wood')) { root.style.setProperty('--modal-primary', '#d35400'); } 
             else if (name.includes('abs') || name.includes('pmag') || name.includes('polymer') || name.includes('kydex') || name.includes('delrin') || name.includes('cpvc')) { root.style.setProperty('--modal-primary', '#00d2ff'); } 
             else if (name.includes('slate') || name.includes('granite') || name.includes('stone') || name.includes('glass')) { root.style.setProperty('--modal-primary', '#95a5a6'); } 
-            else { root.style.setProperty('--modal-primary', isAdmin ? '#ffd700' : '#00adb5'); }
+            else { root.style.setProperty('--modal-primary', defaultColor); }
         }
 
         function updateHatchUI() {
@@ -847,20 +968,19 @@
             if (item["Notes"]) html += `<div class="h-notes-section"><div class="h-notes-title"><span>تێبینی</span><span style="font-size: 12px; color: #c0392b;">Notes</span></div><div class="h-notes-text">${item["Notes"]}</div></div>`;
             cardContent.innerHTML = html; detailsWrapper.classList.add("active");
         }
-
+        
         function renderUserTable() {
             const users = getUsers(); const tbody = document.getElementById('userTableBody'); tbody.innerHTML = '';
             users.forEach((u) => {
-                const roleBadge = u.role === 'admin' ? `<span class="role-badge role-admin">👑 خودان</span>` : `<span class="role-badge role-user">👤 بکارئینەر</span>`;
-                let actions = u.username !== 'Dastan' ? `<button class="action-btn" title="گۆڕینا پاسواردی" onclick="changePass('${u.username}')">🔑</button><button class="action-btn" title="ئەدمین/بکارئینەر" onclick="toggleRole('${u.username}')">🔄</button><button class="action-btn" title="ژێبرن" onclick="deleteUser('${u.username}')">❌</button>` : `<span style="color:#aaa; font-size:12px;">کۆنترۆلا سەرەکی</span>`;
+                const roleBadge = u.role === 'admin' ? `<span class="role-badge role-admin">👑 خودان</span>` : u.role === 'co-admin' ? `<span class="role-badge role-coadmin">💜 هاریکار</span>` : `<span class="role-badge role-user">👤 بکارئینەر</span>`;
+                let actions = u.username !== 'Dastan' ? `<button class="action-btn" title="گۆڕینا پاسواردی" onclick="changePass('${u.username}')">🔑</button><button class="action-btn" title="ئەدمین/هاریکار/بکارئینەر" onclick="toggleRole('${u.username}')">🔄</button><button class="action-btn" title="ژێبرن" onclick="deleteUser('${u.username}')">❌</button>` : `<span style="color:#aaa; font-size:12px;">کۆنترۆلا سەرەکی</span>`;
                 tbody.innerHTML += `<tr><td style="font-weight:bold;">${u.username}</td><td style="font-family:monospace;">${u.password}</td><td>${roleBadge}</td><td style="text-align:center;">${actions}</td></tr>`;
             });
         }
         function addNewUser() { const name = document.getElementById('newUsername').value.trim(); const pass = document.getElementById('newPassword').value.trim(); const role = document.getElementById('newRole').value; if (!name || !pass) { alert("کەرەمکە ناڤ و پاسواردێ بنڤیسە!"); return; } let users = getUsers(); if (users.find(u => u.username === name)) { alert("ئەڤ ناڤە یێ هەی!"); return; } users.push({ username: name, password: pass, role: role }); saveUsers(users); document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; renderUserTable(); }
         function deleteUser(username) { if(confirm(`تۆ دڵنیایی دڤێت هەژمارا '${username}' بسڕی؟`)) { let users = getUsers(); users = users.filter(u => u.username !== username); saveUsers(users); renderUserTable(); } }
-        function toggleRole(username) { let users = getUsers(); let user = users.find(u => u.username === username); if (user) { user.role = user.role === 'admin' ? 'user' : 'admin'; saveUsers(users); renderUserTable(); } }
+        function toggleRole(username) { let users = getUsers(); let user = users.find(u => u.username === username); if (user) { user.role = user.role === 'admin' ? 'user' : user.role === 'user' ? 'co-admin' : 'admin'; saveUsers(users); renderUserTable(); } }
         function changePass(username) { let newPass = prompt(`پاسواردێ نووی بۆ '${username}' بنڤیسە:`); if (newPass && newPass.trim() !== '') { let users = getUsers(); let user = users.find(u => u.username === username); if (user) { user.password = newPass.trim(); saveUsers(users); renderUserTable(); } } }
-
     </script>
 </body>
 </html>
