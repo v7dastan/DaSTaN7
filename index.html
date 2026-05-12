@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DaSTaN 7 - Laser Engraving Studio</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2300d2ff%22/><text x=%2250%22 y=%2268%22 font-family=%22Arial%22 font-size=%2260%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22%23000%22>D7</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -47,8 +49,7 @@
         .contact-box span { color: var(--text-muted); font-size: 14px; font-weight: 700; margin-bottom: 5px; }
         .contact-link { display: flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; color: var(--text-light); background: var(--bg-input); padding: 12px; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; border: 1px solid var(--border); transition: all 0.3s ease; direction: ltr; }
         .contact-link:hover { border-color: var(--primary); color: var(--primary); background: #33333b; }
-        .contact-link.snapchat:hover { border-color: #fffc00; color: #fffc00; }
-
+        
         /* App Screen */
         #app-screen { display: none; height: 100%; flex-direction: column; }
         header { background: var(--bg-panel); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 15px;}
@@ -74,20 +75,18 @@
         .control-group label { display: block; margin-bottom: 10px; font-weight: 700; color: var(--text-muted); font-size: 14px; }
         .control-group input[type="range"] { width: 100%; height: 6px; border-radius: 4px; background: var(--border); outline: none; -webkit-appearance: none; }
         .control-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; cursor: pointer; transition: 0.2s; }
-        .control-group input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
         .control-group select { width: 100%; padding: 14px; background: var(--bg-input); color: white; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 15px; font-weight: 500; outline: none; cursor: pointer; }
         .control-group select:focus { border-color: var(--primary); }
         
-        /* AI Box */
+        /* AI & Editor Box */
         .ai-box { background: rgba(255, 215, 0, 0.1); padding: 25px 20px; border-radius: var(--radius-lg); border: 2px dashed #ffd700; transition: 0.3s; text-align: center; margin-bottom: 25px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
         .ai-box:hover { background: rgba(255, 215, 0, 0.15); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
         .ai-box label { color: #ffd700; font-size: 16px; margin-bottom: 15px; }
-
-        /* Image Editor Options */
+        
         .editor-box { background: rgba(0, 210, 255, 0.05); padding: 20px; border-radius: var(--radius-lg); border: 1px solid rgba(0, 210, 255, 0.2); margin-bottom: 25px; }
         .editor-box h4 { color: var(--primary); margin-bottom: 15px; font-size: 15px; border-bottom: 1px dashed rgba(0,210,255,0.3); padding-bottom: 10px;}
         .checkbox-container { display: flex; flex-direction: column; gap: 12px; }
-        .checkbox-container label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-light); font-size: 14px; font-weight: normal; margin-bottom: 0;}
+        .checkbox-container label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-light); font-size: 14px;}
         .checkbox-container input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
         
         .ezcad-panel { background: var(--bg-input); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-top: 25px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
@@ -116,7 +115,6 @@
         body.mobile-mode { overflow-y: auto; }
         body.mobile-mode header { flex-direction: column; padding: 15px; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
         body.mobile-mode .header-title-box { align-items: center; }
-        body.mobile-mode header h1 { font-size: 22px; }
         body.mobile-mode .header-buttons { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;}
         body.mobile-mode .btn { justify-content: center; padding: 10px; font-size: 12px; flex: 1 1 calc(33% - 10px); }
         body.mobile-mode .main-content { flex-direction: column; height: auto; overflow: visible; }
@@ -132,14 +130,12 @@
             body { overflow-y: auto; }
             header { flex-direction: column; padding: 15px; gap: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
             .header-title-box { align-items: center; }
-            header h1 { font-size: 22px; }
             .header-buttons { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
             .header-buttons #viewToggleBtn { display: none; }
             .btn { justify-content: center; padding: 10px; font-size: 12px; flex: 1 1 calc(45% - 10px); }
             .main-content { flex-direction: column; height: auto; overflow: visible; }
             .workspace { order: 1; padding: 10px; background: #000; height: 400px; flex: none; width: 100%; }
             .canvas-container { border-radius: 0; border: none; padding: 0; box-shadow: none; background: transparent; height: 100%;}
-            .canvas-title { font-size: 13px; margin-bottom: 10px; }
             .sidebar { order: 2; width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 25px 20px; background: var(--bg-panel); border-radius: 24px 24px 0 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.5); z-index: 10;}
         }
 
@@ -153,11 +149,33 @@
         .h-header h1 { font-size: 24px; font-weight: 800; margin-bottom: 5px; color: var(--modal-primary); }
         .h-header p { font-size: 14px; color: var(--modal-muted); direction: ltr; }
 
-        /* Crop Modal Specific */
+        /* Guide & Hatch UI */
+        .guide-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px; }
+        .guide-result { background: rgba(0, 210, 255, 0.05); border-right: 4px solid var(--primary); padding: 15px; border-radius: 8px; margin-top: 20px; display: none; }
+        .guide-result.show { display: block; }
+        .guide-result h4 { color: var(--primary); margin-bottom: 10px; font-size: 16px; }
+        .guide-result p { font-size: 14px; line-height: 1.6; color: var(--text-light); margin-bottom: 15px;}
+        .param-tag { display: inline-block; background: #222; padding: 4px 8px; border-radius: 4px; font-family: monospace; color: #ffd700; margin: 2px; border: 1px solid #444;}
+        .modal-container select, .modal-container input[type="text"], .modal-container input[type="password"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: #fff;}
+        .modal-container label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #ccc;}
+        .preview-input { color: var(--modal-primary); font-size: 20px; font-weight: 800; text-align: center; direction: ltr; letter-spacing: 2px; border: 2px dashed var(--modal-primary); }
+        .h-details-wrapper { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
+        .h-details-wrapper.active { display: block; opacity: 1; transform: translateY(0); }
+        .h-info-card { background-color: var(--modal-box); border-radius: var(--radius-lg); padding: 20px; border-right: 5px solid var(--modal-primary); }
+        .h-material-title { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 20px; direction: ltr; color: var(--modal-primary); border-bottom: 2px solid var(--modal-box); padding-bottom: 12px; }
+        .h-info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .h-info-row:last-child { border-bottom: none; }
+        .h-label-group { display: flex; flex-direction: column; text-align: right; }
+        .h-label-ku { font-size: 15px; font-weight: 700; color: var(--modal-text); }
+        .h-label-en { font-size: 12px; color: var(--modal-muted); direction: ltr; text-align: right; }
+        .h-value-box { background-color: rgba(0,0,0,0.5); padding: 8px 14px; border-radius: 8px; font-family: monospace; font-size: 15px; font-weight: bold; color: var(--modal-primary); direction: ltr; }
+        .h-notes-section { margin-top: 15px; background-color: rgba(231, 76, 60, 0.1); border-right: 4px solid #e74c3c; padding: 15px; border-radius: var(--radius-md); }
+        .h-notes-title { font-weight: 800; color: #e74c3c; margin-bottom: 8px; display: flex; justify-content: space-between; font-size: 14px;}
+        .h-notes-text { font-size: 14px; line-height: 1.6; direction: ltr; text-align: left; color: var(--modal-text); font-weight: 500; }
+        
         .crop-container { width: 100%; max-height: 500px; background: #000; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 8px; margin-bottom: 20px;}
         .crop-container img { max-width: 100%; max-height: 400px; display: block; }
         
-        /* Table Styles for Users */
         .user-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .user-table th, .user-table td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border); font-size: 15px;}
         .user-table th { color: var(--modal-primary); font-weight: 800; }
@@ -169,7 +187,6 @@
         .add-user-box { background: rgba(0,0,0,0.3); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px; }
         .flex-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;}
         .flex-row > div { flex: 1; min-width: 120px; }
-        .modal-container input[type="text"], .modal-container input[type="password"], .modal-container select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: #fff;}
     </style>
 </head>
 <body>
@@ -185,7 +202,6 @@
             <div class="contact-box">
                 <span>پەیوەندی ب گەشەپێدەری ڤە:</span>
                 <a href="tel:07506887626" class="contact-link">📞 0750 688 7626</a>
-                <a href="https://www.snapchat.com/add/dasta.n" target="_blank" class="contact-link snapchat">👻 dasta.n</a>
             </div>
         </div>
     </div>
@@ -200,9 +216,10 @@
                 </div>
             </div>
             <div class="header-buttons">
+                <button class="btn btn-outline" style="border-color: #9b59b6; color: #9b59b6;" onclick="openGuideModal()">📘 ڕێبەرێ ڕەنگ و ڕەقیێ</button>
+                <button class="btn btn-outline" onclick="openHatchModal()">📋 پێزانینێن نەخشێ</button>
                 <button class="btn btn-outline" id="usersAdminBtn" style="display: none; border-color: #ffd700; color: #ffd700;" onclick="openUsersModal()">👥 بکارئینەران</button>
                 <button class="btn btn-outline btn-warning" id="viewToggleBtn" onclick="toggleViewMode()">📱 مۆبایل</button>
-                <button class="btn btn-outline" onclick="openHatchModal()">📋 پێزانینێن نەخشێ</button>
                 <button class="btn" onclick="saveImage()">💾 سەیڤکرن</button>
                 <button class="btn btn-danger" onclick="logout()">🚪 دەرکەفتن</button>
             </div>
@@ -235,13 +252,25 @@
                 <div class="control-group editor-box">
                     <h4>🎨 دەستکاریکرنا وێنەی (Image Editing)</h4>
                     <button class="btn btn-outline" onclick="openCropModal()" style="width: 100%; justify-content: center; margin-bottom: 15px;">✂️ بڕینا وێنەی (Crop)</button>
-                    
                     <div class="checkbox-container">
+                        <label><input type="checkbox" id="chkHDR" onchange="processImage()"> 📸 شێوازێ HDR (دەرخستنا وردەکاریان)</label>
                         <label><input type="checkbox" id="chkInvert" onchange="processImage()"> ⬛ پێچەوانەکرن (Invert / Negative)</label>
                         <label><input type="checkbox" id="chkMirror" onchange="processImage()"> 🪞 ئاوێنەکرن (Mirror / Flip)</label>
                         <label><input type="checkbox" id="chkEdge" onchange="processImage()"> ✏️ هێلکاری (Edge Detection)</label>
                         <label><input type="checkbox" id="chkRemoveWhite" onchange="processImage()"> ✂️ سڕینا سپیاتیێ (Remove White BG)</label>
                     </div>
+                </div>
+
+                <div class="control-group" style="display: none;" id="manualMaterialSelectDiv">
+                    <label>🛠️ هەلبژارتنا ماددەی (Manual)</label>
+                    <select id="mainMaterialSelect" onchange="applyAutoSettings()">
+                        <option value="none">-- ماددەی هەلبژێرە --</option>
+                        <option value="stainless_steel">مەعدەن (Stainless Steel)</option>
+                        <option value="gold_silver">زێر / زیڤ (Gold/Silver)</option>
+                        <option value="aluminum">ئەلەمینیۆم (Aluminum)</option>
+                        <option value="brass">مس / سفر (Brass)</option>
+                        <option value="leather">پێستی (Leather)</option>
+                    </select>
                 </div>
 
                 <div class="control-group">
@@ -297,17 +326,45 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="cropModal">
-        <div class="modal-container" style="max-width: 800px;">
-            <button class="close-btn" onclick="closeCropModal()">&times;</button>
+    <div class="modal-overlay" id="guideModal">
+        <div class="modal-container" style="max-width: 650px;">
+            <button class="close-btn" onclick="closeGuideModal()">&times;</button>
             <div class="h-header">
-                <h1 style="color: var(--primary);">✂️ بڕینا وێنەی</h1>
-                <p>Crop & Resize</p>
+                <h1 style="color: #9b59b6;">📘 ڕێبەرێ ڕەنگ و ڕەقیێ</h1>
+                <p>Advanced Hatch Guide (EzCad 2)</p>
             </div>
-            <div class="crop-container">
-                <img id="cropImage" src="">
+            <div class="guide-box">
+                <div class="flex-row">
+                    <div>
+                        <label>١. جۆرێ ماددەی هەلبژێرە:</label>
+                        <select id="guideMaterial" onchange="calculateGuide()">
+                            <option value="none">-- هەلبژێرە --</option>
+                            <option value="steel">ستینلێس ستیل / ئاسن (ماددەیێ ڕەق)</option>
+                            <option value="aluminum">ئەلەمینیۆم (ماددەیێ نەرم / شەوقدەر)</option>
+                            <option value="brass">مس / مسێ زێڕی (ماددەیێ نەرم)</option>
+                            <option value="leather">پێستی (زۆر نەرم / دسوژیت)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>٢. ئەنجامێ تە دڤێت:</label>
+                        <select id="guideEffect" onchange="calculateGuide()">
+                            <option value="black">ڕەشکرن (Black Marking)</option>
+                            <option value="white">سپیکرن / پۆلیش (White/Frost)</option>
+                            <option value="deep">هەلکۆلین (Deep Engrave)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <button class="btn" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px;" onclick="saveCrop()">💾 بڕینێ سەیڤ بکە (Apply Crop)</button>
+            <div class="guide-result" id="guideResult">
+                <h4 id="gTitle">ئەنجام:</h4>
+                <p id="gExplanation">ل ڤێرە ئەگەرێن زانستی و شێوازێ کارکرنێ دێ دیار بن...</p>
+                <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                    <span class="param-tag" id="gSpeed">Speed: --</span>
+                    <span class="param-tag" id="gPower">Power: --</span>
+                    <span class="param-tag" id="gFreq">Freq: --</span>
+                    <span class="param-tag" id="gHatch">Hatch: --</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -324,12 +381,28 @@
                     <option value="">-- هەلبژێرە (Select) --</option>
                 </select>
             </div>
+            <div class="h-form-group">
+                <label>تاقیکرنا ڕەنگێ نڤیسینێ (Color Preview):</label>
+                <input type="text" class="preview-input" value="DaSTaN 7" placeholder="ل ڤێرە بنڤیسە...">
+            </div>
             <div class="h-details-wrapper" id="hDetailsWrapper">
                 <div class="h-info-card">
                     <div class="h-material-title" id="hMTitle">Material Name</div>
                     <div id="hCardContent"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="cropModal">
+        <div class="modal-container" style="max-width: 800px;">
+            <button class="close-btn" onclick="closeCropModal()">&times;</button>
+            <div class="h-header">
+                <h1 style="color: var(--primary);">✂️ بڕینا وێنەی</h1>
+                <p>Crop & Resize</p>
+            </div>
+            <div class="crop-container"><img id="cropImage" src=""></div>
+            <button class="btn" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px;" onclick="saveCrop()">💾 بڕینێ سەیڤ بکە (Apply Crop)</button>
         </div>
     </div>
 
@@ -343,9 +416,9 @@
             <div class="add-user-box">
                 <h3 style="color: #ffd700; margin-bottom: 15px; font-size: 16px;">➕ زێدەکرنا ئەکاونتێ نووی</h3>
                 <div class="flex-row">
-                    <div><label style="font-size: 13px; color: #aaa;">ناڤێ بکارئینەری:</label><input type="text" id="newUsername" placeholder="ناڤ..."></div>
-                    <div><label style="font-size: 13px; color: #aaa;">پاسوارد:</label><input type="text" id="newPassword" placeholder="پاسوارد..."></div>
-                    <div><label style="font-size: 13px; color: #aaa;">ئاست:</label><select id="newRole"><option value="user">بکارئینەر ئاسایی</option><option value="admin">خودان (Admin)</option></select></div>
+                    <div><label>ناڤێ بکارئینەری:</label><input type="text" id="newUsername" placeholder="ناڤ..."></div>
+                    <div><label>پاسوارد:</label><input type="text" id="newPassword" placeholder="پاسوارد..."></div>
+                    <div><label>ئاست:</label><select id="newRole"><option value="user">بکارئینەر ئاسایی</option><option value="admin">خودان (Admin)</option></select></div>
                 </div>
                 <button class="btn" style="width: 100%; margin-top: 15px; background: #ffd700; color: #000; justify-content: center;" onclick="addNewUser()">زێدەکرن</button>
             </div>
@@ -359,130 +432,161 @@
     </div>
 
     <script>
-        // Global State
+        // Global variables
         let currentDetectedMaterial = 'none';
-        let originalImage = null; // The base image object
+        let originalImage = null; 
         let cropper = null;
 
         // ==========================================
-        // LocalStorage DB & Session
+        // 1. User DB & Safe Login Logic
         // ==========================================
-        function initDB() {
-            let users = localStorage.getItem('dastan_users');
-            if (!users) {
+        function initDB() { 
+            let usersStr = localStorage.getItem('dastan_users'); 
+            let parsed = null;
+            try { parsed = JSON.parse(usersStr); } catch(e) {}
+            
+            // ئەگەر داتابەیس یێ تێکچووی بیت یان ڤالا بیت، دێ خۆ ڕاست کەتەڤە
+            if (!parsed || !Array.isArray(parsed) || parsed.length === 0) { 
                 const defaultUsers = [
-                    { username: 'Dastan', password: '19971997', role: 'admin' },
+                    { username: 'Dastan', password: '19971997', role: 'admin' }, 
                     { username: 'lora', password: 'dastan1', role: 'user' }
-                ];
-                localStorage.setItem('dastan_users', JSON.stringify(defaultUsers));
-            }
+                ]; 
+                localStorage.setItem('dastan_users', JSON.stringify(defaultUsers)); 
+            } 
         }
-        function getUsers() { return JSON.parse(localStorage.getItem('dastan_users')); }
+
+        function getUsers() { 
+            initDB(); // گەرەنتی دکەت کو داتابەیس یێ هەیە پێش وەرگرتنێ
+            return JSON.parse(localStorage.getItem('dastan_users')); 
+        }
+
         function saveUsers(usersArray) { localStorage.setItem('dastan_users', JSON.stringify(usersArray)); }
-
-        function checkSession() {
-            initDB();
-            const activeUserStr = localStorage.getItem('active_user');
-            if (activeUserStr) { setupUIForUser(JSON.parse(activeUserStr)); }
+        
+        function checkSession() { 
+            initDB(); 
+            const activeUserStr = localStorage.getItem('active_user'); 
+            if (activeUserStr) { 
+                try {
+                    setupUIForUser(JSON.parse(activeUserStr)); 
+                } catch(e) {
+                    localStorage.removeItem('active_user');
+                }
+            } 
         }
 
-        function checkLogin() {
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value;
-            const users = getUsers();
-            const foundUser = users.find(u => u.username === user && u.password === pass);
-            
-            if (foundUser) {
-                localStorage.setItem('active_user', JSON.stringify(foundUser));
-                setupUIForUser(foundUser);
-            } else { document.getElementById('error-msg').style.display = 'block'; }
-        }
-
-        function setupUIForUser(user) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-screen').style.display = 'flex';
-            
-            if (user.role === 'admin') {
-                document.body.classList.add('admin-mode');
-                document.getElementById('welcomeMessage').innerText = `بۆردێ تایبەت یێ ${user.username}`;
-                document.getElementById('welcomeMessage').style.borderColor = "#ffd700";
-                document.getElementById('usersAdminBtn').style.display = 'flex';
-            } else {
-                document.body.classList.remove('admin-mode');
-                document.getElementById('welcomeMessage').innerText = `👋 بخێرهاتی ${user.username}`;
-                document.getElementById('welcomeMessage').style.borderColor = "var(--primary)";
-                document.getElementById('usersAdminBtn').style.display = 'none';
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('active_user');
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('app-screen').style.display = 'none';
-            document.getElementById('username').value = ''; document.getElementById('password').value = '';
+        function checkLogin() { 
             document.getElementById('error-msg').style.display = 'none';
-            document.body.classList.remove('admin-mode');
+            const user = document.getElementById('username').value.trim(); 
+            const pass = document.getElementById('password').value; 
+            const users = getUsers() || [];
+            
+            // Case-insensitive login بۆ ناڤی (گەر بچویک یان مەزن بنڤیسیت)
+            const foundUser = users.find(u => u.username.toLowerCase() === user.toLowerCase() && u.password === pass); 
+            
+            if (foundUser) { 
+                localStorage.setItem('active_user', JSON.stringify(foundUser)); 
+                setupUIForUser(foundUser); 
+            } else { 
+                document.getElementById('error-msg').style.display = 'block'; 
+            } 
         }
+
+        function setupUIForUser(user) { 
+            document.getElementById('login-screen').style.display = 'none'; 
+            document.getElementById('app-screen').style.display = 'flex'; 
+            
+            if (user.role === 'admin') { 
+                document.body.classList.add('admin-mode'); 
+                document.getElementById('welcomeMessage').innerText = `بۆردێ تایبەت یێ ${user.username}`; 
+                document.getElementById('welcomeMessage').style.borderColor = "#ffd700"; 
+                document.getElementById('usersAdminBtn').style.display = 'flex'; 
+            } else { 
+                document.body.classList.remove('admin-mode'); 
+                document.getElementById('welcomeMessage').innerText = `👋 بخێرهاتی ${user.username}`; 
+                document.getElementById('welcomeMessage').style.borderColor = "var(--primary)"; 
+                document.getElementById('usersAdminBtn').style.display = 'none'; 
+            } 
+        }
+
+        function logout() { 
+            localStorage.removeItem('active_user'); 
+            document.getElementById('login-screen').style.display = 'flex'; 
+            document.getElementById('app-screen').style.display = 'none'; 
+            document.getElementById('username').value = ''; 
+            document.getElementById('password').value = ''; 
+            document.getElementById('error-msg').style.display = 'none'; 
+            document.body.classList.remove('admin-mode'); 
+        }
+
         document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
 
         // ==========================================
-        // Mobile Toggle & Compare Slider
+        // 2. Interface Toggles & Sliders
         // ==========================================
         let isMobileMode = false;
-        function toggleViewMode() {
-            isMobileMode = !isMobileMode;
-            const btn = document.getElementById('viewToggleBtn');
-            if (isMobileMode) { document.body.classList.add('mobile-mode'); btn.innerHTML = '🖥️ کۆمپیوتەر'; } 
-            else { document.body.classList.remove('mobile-mode'); btn.innerHTML = '📱 مۆبایل'; }
-            setTimeout(updateCompareSlider, 100);
-        }
+        function toggleViewMode() { isMobileMode = !isMobileMode; const btn = document.getElementById('viewToggleBtn'); if (isMobileMode) { document.body.classList.add('mobile-mode'); btn.innerHTML = '🖥️ کۆمپیوتەر'; } else { document.body.classList.remove('mobile-mode'); btn.innerHTML = '📱 مۆبایل'; } setTimeout(updateCompareSlider, 100); }
+        function updateCompareSlider() { const val = document.getElementById('compareSlider').value; document.getElementById('canvasAfter').style.clipPath = `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`; document.getElementById('sliderLine').style.left = `${val}%`; document.getElementById('sliderThumb').style.left = `${val}%`; }
 
-        function updateCompareSlider() {
-            const val = document.getElementById('compareSlider').value;
-            document.getElementById('canvasAfter').style.clipPath = `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`;
-            document.getElementById('sliderLine').style.left = `${val}%`;
-            document.getElementById('sliderThumb').style.left = `${val}%`;
-        }
-
-        // ==========================================
-        // Canvas & Image Loading Setup
-        // ==========================================
         const canvasBefore = document.getElementById('canvasBefore'); const ctxBefore = canvasBefore.getContext('2d', { willReadFrequently: true });
         const canvasAfter = document.getElementById('canvasAfter'); const ctxAfter = canvasAfter.getContext('2d', { willReadFrequently: true });
 
         document.getElementById('imageLoader').addEventListener('change', function(e) {
             const reader = new FileReader();
             reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    loadImageToCanvas(img);
-                    document.getElementById('aiStatus').innerText = "ئامادەیە بۆ تەحلیلکرنێ";
-                }
+                const img = new Image(); img.onload = function() { loadImageToCanvas(img); document.getElementById('aiStatus').innerText = "ئامادەیە بۆ تەحلیلکرنێ"; }
                 img.src = event.target.result;
             }
-            reader.readAsDataURL(e.target.files[0]);
+            if(e.target.files.length > 0) reader.readAsDataURL(e.target.files[0]);
         });
 
         function loadImageToCanvas(img) {
-            originalImage = img;
-            let maxDim = 1200; let width = img.width; let height = img.height;
+            originalImage = img; let maxDim = 1200; let width = img.width; let height = img.height;
             if (width > maxDim || height > maxDim) { const ratio = Math.min(maxDim/width, maxDim/height); width = Math.round(width*ratio); height = Math.round(height*ratio); }
             canvasBefore.width = canvasAfter.width = width; canvasBefore.height = canvasAfter.height = height;
-            processImage(); // Draw logic handled inside processImage to support flipping
+            processImage(); 
         }
 
         // ==========================================
-        // AI & Material Settings
+        // 3. Hatch Guide Logic
+        // ==========================================
+        const guideModal = document.getElementById('guideModal');
+        function openGuideModal() { guideModal.classList.add('show'); }
+        function closeGuideModal() { guideModal.classList.remove('show'); }
+        
+        function calculateGuide() {
+            const mat = document.getElementById('guideMaterial').value; const effect = document.getElementById('guideEffect').value; const resultBox = document.getElementById('guideResult'); const exp = document.getElementById('gExplanation');
+            const sSp = document.getElementById('gSpeed'); const sPo = document.getElementById('gPower'); const sFr = document.getElementById('gFreq'); const sHa = document.getElementById('gHatch');
+            if (mat === 'none') { resultBox.classList.remove('show'); return; }
+            resultBox.classList.add('show');
+            if (mat === 'steel') {
+                if (effect === 'black') { exp.innerText = "💡 بۆ ڕەشکرنا ستیلی (ماددەیێ ڕەق)، پێدڤییە لێزەر گەرمییەکا زۆر بدەتێ دا کو ئۆکسیدەیشن (Oxidation) چێبیت. لەوڕا لەزاتی دڤێت یا کێم بیت و هێز یا بلند بیت."; sSp.innerText = "Speed: 100 - 300 mm/s"; sPo.innerText = "Power: 80 - 100%"; sFr.innerText = "Freq: 50 - 80 kHz"; sHa.innerText = "Hatch: 0.01 - 0.02 mm"; } 
+                else if (effect === 'white') { exp.innerText = "💡 بۆ سپیکرنێ، ئەم دڤێت ب تنێ سەرێ ماددەی پاڤ پاک بکەین بێی کو گەرم ببیت. لەوڕا لەزاتییا زۆر و هێزا کێم دهێتە بکارئینان."; sSp.innerText = "Speed: 1000 - 1500 mm/s"; sPo.innerText = "Power: 30 - 50%"; sFr.innerText = "Freq: 20 - 30 kHz"; sHa.innerText = "Hatch: 0.05 mm"; } 
+                else { exp.innerText = "💡 بۆ هەلکۆلینێ (Deep Engrave)، پێدڤییە تو چەندین پاسان (Passes) لێ بدەی، ئێک ڕاست و ئێک پێچەوانە دا کو ماددە بهێتە دەرخستن."; sSp.innerText = "Speed: 300 - 500 mm/s"; sPo.innerText = "Power: 90 - 100%"; sFr.innerText = "Freq: 30 - 40 kHz"; sHa.innerText = "Hatch: 0.03 mm"; }
+            } else if (mat === 'aluminum') {
+                if (effect === 'black') { exp.innerText = "💡 ئەلەمینیۆم ماددەیەکێ شەوقدەرە و گەرمیێ زوو بەلاڤ دکەت. بۆ ڕەشکرنێ (بێی MOPA لێزەر) زۆر زەحمەتە ڕەنگی تاری بکەی، لێ هێزا مەزن و لەزاتییا کێم هاریکارە."; sSp.innerText = "Speed: 100 - 200 mm/s"; sPo.innerText = "Power: 90 - 100%"; sFr.innerText = "Freq: 20 - 30 kHz"; sHa.innerText = "Hatch: 0.02 mm"; } 
+                else if (effect === 'white') { exp.innerText = "💡 بۆ سپیکرنا ئەلەمینیۆمێ، ئەڤە کارەکێ ساناهییە چونکی ماددەیێ نەرمە. ب لەزاتییەکا باش لێزەرێ لێ بدە."; sSp.innerText = "Speed: 1000 mm/s"; sPo.innerText = "Power: 40 - 60%"; sFr.innerText = "Freq: 30 kHz"; sHa.innerText = "Hatch: 0.05 mm"; } 
+                else { exp.innerText = "💡 هەلکۆلین ل سەر ئەلەمینیۆمێ زووتر دهێتە کرن چونکی یێ نەرمە، لێ هایداربە ژ تێکچوونا شێوەی ژبەر گەرمییێ."; sSp.innerText = "Speed: 500 mm/s"; sPo.innerText = "Power: 85%"; sFr.innerText = "Freq: 30 kHz"; sHa.innerText = "Hatch: 0.05 mm"; }
+            } else if (mat === 'brass') {
+                if (effect === 'black') { exp.innerText = "💡 مس ماددەیەکێ زەردێ نەرمە، بۆ ڕەشکرنا وی پێدڤی ب گەرمییەکا کێمتر هەیە ژ ستیلی دا کو نەسۆژیت و ڕەنگێ وی تێک نەچیت."; sSp.innerText = "Speed: 300 - 400 mm/s"; sPo.innerText = "Power: 80%"; sFr.innerText = "Freq: 50 kHz"; sHa.innerText = "Hatch: 0.03 mm"; } 
+                else if (effect === 'white') { exp.innerText = "💡 سپیکرنا مس-ی واتا پۆلیشکرن (بریقەدارکرن). لەزاتییا زۆر دێ هێلیت گەلەک جوان دیار ببیت."; sSp.innerText = "Speed: 1200 mm/s"; sPo.innerText = "Power: 40%"; sFr.innerText = "Freq: 30 kHz"; sHa.innerText = "Hatch: 0.05 mm"; } 
+                else { exp.innerText = "💡 هەلکۆلین ل سەر مس-ی گەلەک یا ساناهییە و زووتر کورت دبیت ژ ستیلی."; sSp.innerText = "Speed: 400 mm/s"; sPo.innerText = "Power: 90%"; sFr.innerText = "Freq: 40 kHz"; sHa.innerText = "Hatch: 0.03 mm"; }
+            } else if (mat === 'leather') {
+                if (effect === 'black') { exp.innerText = "💡 پێستی زۆر یێ هەستیارە! بۆ ڕەشکرنێ پێدڤییە هێز گەلەک یا کێم بیت و لەزاتی یا زۆر بیت دا کو ئاگر نەگریت."; sSp.innerText = "Speed: 1500 mm/s"; sPo.innerText = "Power: 20 - 30%"; sFr.innerText = "Freq: 30 kHz"; sHa.innerText = "Hatch: 0.08 mm"; } 
+                else if (effect === 'white') { exp.innerText = "💡 سپیکرنا پێستی زۆربەی جاران ل سەر پێستیێ تاری ب ساناهی دهێتە کرن ب کێمکرنا هێزێ بۆ ئاستەکێ گەلەک نزم."; sSp.innerText = "Speed: 2000 mm/s"; sPo.innerText = "Power: 10 - 15%"; sFr.innerText = "Freq: 20 kHz"; sHa.innerText = "Hatch: 0.1 mm"; } 
+                else { exp.innerText = "💡 بۆ هەلکۆلینا پێستی، باشترە تو هێزێ بلند نەکەی، بەلکو ژمارا پاسان (Passes) زێدە بکەی دا کو ب جوانی ببڕیت بێی سۆتن."; sSp.innerText = "Speed: 1000 mm/s"; sPo.innerText = "Power: 30%"; sFr.innerText = "Freq: 30 kHz"; sHa.innerText = "Hatch: 0.05 mm (2-3 Passes)"; }
+            }
+        }
+
+        // ==========================================
+        // 4. AI Scanner Logic
         // ==========================================
         const tmURL = ""; 
         let aiModel, maxPredictions;
-
         async function initAI() {
             if (!tmURL || tmURL === "") return;
             try {
                 document.getElementById('aiStatus').innerText = "⏳ مۆدێل یێ بار دکەت...";
-                const modelURL = tmURL + "model.json"; const metadataURL = tmURL + "metadata.json";
-                aiModel = await tmImage.load(modelURL, metadataURL);
+                aiModel = await tmImage.load(tmURL + "model.json", tmURL + "metadata.json");
                 maxPredictions = aiModel.getTotalClasses();
                 document.getElementById('aiStatus').innerText = "✅ زیرەکیا دەستکرد یا ئامادەیە";
             } catch (error) { document.getElementById('aiStatus').innerText = "❌ خەلەتی د بارکرنێ دا هەبوو"; }
@@ -495,13 +599,8 @@
                 setTimeout(() => {
                     const simulatedMats = ["stainless_steel", "gold_silver", "aluminum", "brass", "leather"];
                     const randomMat = simulatedMats[Math.floor(Math.random() * simulatedMats.length)];
-                    let kuName = "";
-                    if(randomMat === "stainless_steel") kuName = "مەعدەن (Stainless Steel)"; else if(randomMat === "gold_silver") kuName = "زێر / زیڤ (Gold/Silver)";
-                    else if(randomMat === "aluminum") kuName = "ئەلەمینیۆم (Aluminum)"; else if(randomMat === "brass") kuName = "مس / سفر (Brass)"; else if(randomMat === "leather") kuName = "پێستی (Leather)";
-                    currentDetectedMaterial = randomMat;
-                    document.getElementById('aiStatus').innerText = `🎯 هاتە دیتن: ${kuName} (Simulated)`;
-                    document.getElementById('mainMaterialSelect').value = randomMat;
-                    applyAutoSettings();
+                    let kuName = ""; if(randomMat === "stainless_steel") kuName = "مەعدەن (Stainless Steel)"; else if(randomMat === "gold_silver") kuName = "زێر / زیڤ (Gold/Silver)"; else if(randomMat === "aluminum") kuName = "ئەلەمینیۆم (Aluminum)"; else if(randomMat === "brass") kuName = "مس / سفر (Brass)"; else if(randomMat === "leather") kuName = "پێستی (Leather)";
+                    currentDetectedMaterial = randomMat; document.getElementById('aiStatus').innerText = `🎯 هاتە دیتن: ${kuName} (Simulated)`; document.getElementById('mainMaterialSelect').value = randomMat; applyAutoSettings();
                 }, 1500);
                 return;
             }
@@ -511,12 +610,8 @@
             let highestProb = 0; let bestMatch = "";
             for (let i = 0; i < maxPredictions; i++) { if (prediction[i].probability > highestProb) { highestProb = prediction[i].probability; bestMatch = prediction[i].className.toLowerCase(); } }
             if (highestProb > 0.60) {
-                if (bestMatch.includes("steel") || bestMatch.includes("مەعدەن")) currentDetectedMaterial = "stainless_steel"; else if (bestMatch.includes("gold") || bestMatch.includes("silver") || bestMatch.includes("زێر")) currentDetectedMaterial = "gold_silver";
-                else if (bestMatch.includes("aluminum") || bestMatch.includes("ئەلەمینیۆم")) currentDetectedMaterial = "aluminum"; else if (bestMatch.includes("brass") || bestMatch.includes("مس")) currentDetectedMaterial = "brass";
-                else if (bestMatch.includes("leather") || bestMatch.includes("پێستی")) currentDetectedMaterial = "leather"; else currentDetectedMaterial = "none";
-                document.getElementById('aiStatus').innerText = `🎯 هاتە دیتن: ${bestMatch} (${Math.round(highestProb * 100)}%)`;
-                document.getElementById('mainMaterialSelect').value = currentDetectedMaterial;
-                applyAutoSettings();
+                if (bestMatch.includes("steel") || bestMatch.includes("مەعدەن")) currentDetectedMaterial = "stainless_steel"; else if (bestMatch.includes("gold") || bestMatch.includes("silver") || bestMatch.includes("زێر")) currentDetectedMaterial = "gold_silver"; else if (bestMatch.includes("aluminum") || bestMatch.includes("ئەلەمینیۆم")) currentDetectedMaterial = "aluminum"; else if (bestMatch.includes("brass") || bestMatch.includes("مس")) currentDetectedMaterial = "brass"; else if (bestMatch.includes("leather") || bestMatch.includes("پێستی")) currentDetectedMaterial = "leather"; else currentDetectedMaterial = "none";
+                document.getElementById('aiStatus').innerText = `🎯 هاتە دیتن: ${bestMatch} (${Math.round(highestProb * 100)}%)`; document.getElementById('mainMaterialSelect').value = currentDetectedMaterial; applyAutoSettings();
             } else { document.getElementById('aiStatus').innerText = "🤷 نەهاتە ناسکرن ب باشی."; }
         }
 
@@ -529,107 +624,58 @@
         };
 
         function applyAutoSettings() {
-            const mat = document.getElementById('mainMaterialSelect').value;
-            const wattage = parseInt(document.getElementById('laserWattage').value);
+            const mat = document.getElementById('mainMaterialSelect').value; const wattage = parseInt(document.getElementById('laserWattage').value);
             document.getElementById('ez-panel-title').innerText = `⚙️ ڕێکخستنێن زیرەک بۆ ${wattage}W`;
-            if(mat === 'none') {
-                document.getElementById('ez-speed').innerText = "--- mm/s"; document.getElementById('ez-power').innerText = "--- %";
-                document.getElementById('ez-freq').innerText = "--- kHz"; document.getElementById('ez-hatch').innerText = "--- mm";
-                document.getElementById('ez-pass').innerText = "---"; document.getElementById('compareWrapper').style.backgroundColor = "#111"; return;
-            }
-            let baseData = JSON.parse(JSON.stringify(mainMaterialData[mat]));
-            let calcPower = baseData.power; let calcSpeed = baseData.speed;
-            if (wattage === 30) { calcPower = Math.min(100, Math.round(baseData.power * 1.4)); calcSpeed = Math.round(baseData.speed * 0.85); } 
-            else if (wattage === 20) { calcPower = Math.min(100, Math.round(baseData.power * 1.7)); calcSpeed = Math.round(baseData.speed * 0.70); }
-
-            document.getElementById('ez-speed').innerText = calcSpeed + " mm/s"; document.getElementById('ez-power').innerText = calcPower + " %";
-            document.getElementById('ez-freq').innerText = baseData.freq + " kHz"; document.getElementById('ez-hatch').innerText = baseData.hatch + " mm";
-            document.getElementById('ez-pass').innerText = baseData.pass; document.getElementById('compareWrapper').style.backgroundColor = baseData.previewBg;
-
-            if(['gold_silver', 'brass', 'aluminum'].includes(mat)) {
-                document.getElementById('contrast').value = 40; document.getElementById('brightness').value = 10;
-                document.getElementById('unsharpLevel').value = 30; document.getElementById('ditherMode').value = 'floyd';
-            } else {
-                document.getElementById('contrast').value = 20; document.getElementById('brightness').value = 0;
-                document.getElementById('unsharpLevel').value = 10;
-            }
+            if(mat === 'none') { document.getElementById('ez-speed').innerText = "--- mm/s"; document.getElementById('ez-power').innerText = "--- %"; document.getElementById('ez-freq').innerText = "--- kHz"; document.getElementById('ez-hatch').innerText = "--- mm"; document.getElementById('ez-pass').innerText = "---"; document.getElementById('compareWrapper').style.backgroundColor = "#111"; return; }
+            let baseData = JSON.parse(JSON.stringify(mainMaterialData[mat])); let calcPower = baseData.power; let calcSpeed = baseData.speed;
+            if (wattage === 30) { calcPower = Math.min(100, Math.round(baseData.power * 1.4)); calcSpeed = Math.round(baseData.speed * 0.85); } else if (wattage === 20) { calcPower = Math.min(100, Math.round(baseData.power * 1.7)); calcSpeed = Math.round(baseData.speed * 0.70); }
+            document.getElementById('ez-speed').innerText = calcSpeed + " mm/s"; document.getElementById('ez-power').innerText = calcPower + " %"; document.getElementById('ez-freq').innerText = baseData.freq + " kHz"; document.getElementById('ez-hatch').innerText = baseData.hatch + " mm"; document.getElementById('ez-pass').innerText = baseData.pass; document.getElementById('compareWrapper').style.backgroundColor = baseData.previewBg;
+            if(['gold_silver', 'brass', 'aluminum'].includes(mat)) { document.getElementById('contrast').value = 40; document.getElementById('brightness').value = 10; document.getElementById('unsharpLevel').value = 30; document.getElementById('ditherMode').value = 'floyd'; } 
+            else { document.getElementById('contrast').value = 20; document.getElementById('brightness').value = 0; document.getElementById('unsharpLevel').value = 10; }
             processImage();
         }
 
         // ==========================================
-        // Image Processing Engine (With New Features)
+        // 5. Image Editor (HDR, Invert, Edge, Remove BG)
         // ==========================================
         function processImage() {
             if (!originalImage) return;
-            
-            const doMirror = document.getElementById('chkMirror').checked;
-            const doInvert = document.getElementById('chkInvert').checked;
-            const doEdge = document.getElementById('chkEdge').checked;
-            const doRemoveWhite = document.getElementById('chkRemoveWhite').checked;
-            
-            const brightness = parseInt(document.getElementById('brightness').value);
-            const contrast = parseInt(document.getElementById('contrast').value);
-            const unsharpLevel = parseInt(document.getElementById('unsharpLevel').value);
-            const ditherMode = document.getElementById('ditherMode').value;
+            const doMirror = document.getElementById('chkMirror').checked; const doInvert = document.getElementById('chkInvert').checked; const doEdge = document.getElementById('chkEdge').checked; const doRemoveWhite = document.getElementById('chkRemoveWhite').checked; const doHDR = document.getElementById('chkHDR').checked;
+            const brightness = parseInt(document.getElementById('brightness').value); const contrast = parseInt(document.getElementById('contrast').value); const unsharpLevel = parseInt(document.getElementById('unsharpLevel').value); const ditherMode = document.getElementById('ditherMode').value;
 
-            // 1. Draw to Base Canvas (Handling Mirroring)
-            ctxBefore.clearRect(0, 0, canvasBefore.width, canvasBefore.height);
-            ctxBefore.save();
+            ctxBefore.clearRect(0, 0, canvasBefore.width, canvasBefore.height); ctxBefore.save();
             if (doMirror) { ctxBefore.translate(canvasBefore.width, 0); ctxBefore.scale(-1, 1); }
-            ctxBefore.drawImage(originalImage, 0, 0, canvasBefore.width, canvasBefore.height);
-            ctxBefore.restore();
+            ctxBefore.drawImage(originalImage, 0, 0, canvasBefore.width, canvasBefore.height); ctxBefore.restore();
+            ctxAfter.clearRect(0, 0, canvasAfter.width, canvasAfter.height); ctxAfter.drawImage(canvasBefore, 0, 0);
+
+            if (doHDR) { applySharpen(ctxAfter, canvasAfter.width, canvasAfter.height, 60); }
+            if (unsharpLevel > 0) { applySharpen(ctxAfter, canvasAfter.width, canvasAfter.height, unsharpLevel); }
             
-            // Draw initial on After to manipulate
-            ctxAfter.clearRect(0, 0, canvasAfter.width, canvasAfter.height);
-            ctxAfter.drawImage(canvasBefore, 0, 0);
+            let imgData = ctxAfter.getImageData(0, 0, canvasAfter.width, canvasAfter.height); let data = imgData.data;
 
-            // 2. Unsharp Mask
-            if (unsharpLevel > 0) applySharpen(ctxAfter, canvasAfter.width, canvasAfter.height, unsharpLevel);
-
-            let imgData = ctxAfter.getImageData(0, 0, canvasAfter.width, canvasAfter.height); 
-            let data = imgData.data;
-
-            // 3. Edge Detection (Sobel-like Sketch Effect)
             if (doEdge) applyEdgeDetection(data, canvasAfter.width, canvasAfter.height);
-
             const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
             
             for (let i = 0; i < data.length; i += 4) {
-                // Remove White BG
-                if (doRemoveWhite) {
-                    if (data[i] > 240 && data[i+1] > 240 && data[i+2] > 240) {
-                        data[i+3] = 0; // Make transparent
-                        continue;
-                    }
-                }
-                if (data[i+3] === 0) continue; // Skip transparent pixels
-
-                // Grayscale & Contrast & Brightness
-                let gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
+                if (doRemoveWhite && data[i] > 240 && data[i+1] > 240 && data[i+2] > 240) { data[i+3] = 0; continue; }
+                if (data[i+3] === 0) continue; 
+                let gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2]; 
+                if (doHDR) { gray = 255 * Math.pow(gray / 255, 0.75); }
                 let newVal = factor * (gray - 128) + 128 + brightness;
                 newVal = Math.max(0, Math.min(255, newVal));
-                
-                // Invert Colors
                 if (doInvert) newVal = 255 - newVal;
-                
                 data[i] = data[i+1] = data[i+2] = newVal;
             }
 
-            // 4. Dithering (Must be last step)
             if (ditherMode === 'threshold') {
-                for (let i = 0; i < data.length; i += 4) { 
-                    if(data[i+3]===0) continue; 
-                    let v = data[i] > 128 ? 255 : 0; data[i] = data[i+1] = data[i+2] = v; 
-                }
+                for (let i = 0; i < data.length; i += 4) { if(data[i+3]===0) continue; let v = data[i] > 128 ? 255 : 0; data[i] = data[i+1] = data[i+2] = v; }
             } else if (ditherMode === 'floyd') {
                 let w = canvasAfter.width; let h = canvasAfter.height;
                 for (let y = 0; y < h; y++) {
                     for (let x = 0; x < w; x++) {
-                        let i = (y * w + x) * 4; 
-                        if(data[i+3]===0) continue;
+                        let i = (y * w + x) * 4; if(data[i+3]===0) continue;
                         let oldPixel = data[i]; let newPixel = oldPixel < 128 ? 0 : 255;
                         data[i] = data[i+1] = data[i+2] = newPixel; let quantError = oldPixel - newPixel;
-                        
                         if (x + 1 < w && data[i+7] !== 0) { data[i + 4] += quantError * 7 / 16; data[i + 5] += quantError * 7 / 16; data[i + 6] += quantError * 7 / 16; }
                         if (y + 1 < h) {
                             if (x - 1 >= 0 && data[i + w*4 - 1] !== 0) { data[i + w * 4 - 4] += quantError * 3 / 16; data[i + w * 4 - 3] += quantError * 3 / 16; data[i + w * 4 - 2] += quantError * 3 / 16; }
@@ -639,20 +685,11 @@
                     }
                 }
             }
-            
             ctxAfter.putImageData(imgData, 0, 0);
-            
-            // Re-apply original to Before so Before shows mirror if selected
-            ctxBefore.clearRect(0,0, canvasBefore.width, canvasBefore.height);
-            ctxBefore.save();
+            ctxBefore.clearRect(0,0, canvasBefore.width, canvasBefore.height); ctxBefore.save();
             if (doMirror) { ctxBefore.translate(canvasBefore.width, 0); ctxBefore.scale(-1, 1); }
-            ctxBefore.drawImage(originalImage, 0, 0, canvasBefore.width, canvasBefore.height);
-            ctxBefore.restore();
-            // Fill background white for before canvas to avoid transparent issues visually
-            ctxBefore.globalCompositeOperation = 'destination-over';
-            ctxBefore.fillStyle = 'white';
-            ctxBefore.fillRect(0, 0, canvasBefore.width, canvasBefore.height);
-            ctxBefore.globalCompositeOperation = 'source-over';
+            ctxBefore.drawImage(originalImage, 0, 0, canvasBefore.width, canvasBefore.height); ctxBefore.restore();
+            ctxBefore.globalCompositeOperation = 'destination-over'; ctxBefore.fillStyle = 'white'; ctxBefore.fillRect(0, 0, canvasBefore.width, canvasBefore.height); ctxBefore.globalCompositeOperation = 'source-over';
         }
 
         function applySharpen(ctx, w, h, amount) {
@@ -660,75 +697,155 @@
             for (let y = 1; y < h - 1; y++) {
                 for (let x = 1; x < w - 1; x++) {
                     const i = (y * w + x) * 4;
-                    let r = src[i]*5 - src[i-4] - src[i+4] - src[i-w*4] - src[i+w*4];
-                    let g = src[i+1]*5 - src[i-3] - src[i+5] - src[i-w*4+1] - src[i+w*4+1];
-                    let b = src[i+2]*5 - src[i-2] - src[i+6] - src[i-w*4+2] - src[i+w*4+2];
+                    let r = src[i]*5 - src[i-4] - src[i+4] - src[i-w*4] - src[i+w*4]; let g = src[i+1]*5 - src[i-3] - src[i+5] - src[i-w*4+1] - src[i+w*4+1]; let b = src[i+2]*5 - src[i-2] - src[i+6] - src[i-w*4+2] - src[i+w*4+2];
                     dst[i] = src[i] + (r - src[i]) * mix; dst[i+1] = src[i+1] + (g - src[i+1]) * mix; dst[i+2] = src[i+2] + (b - src[i+2]) * mix; dst[i+3] = src[i+3];
                 }
             }
             imgData.data.set(dst); ctx.putImageData(imgData, 0, 0);
         }
-
         function applyEdgeDetection(data, w, h) {
             const src = new Uint8ClampedArray(data);
             for (let y = 1; y < h - 1; y++) {
                 for (let x = 1; x < w - 1; x++) {
                     const i = (y * w + x) * 4;
-                    for (let c = 0; c < 3; c++) {
-                        let val = src[i-w*4+c] + src[i-4+c] + src[i+4+c] + src[i+w*4+c] - 4*src[i+c];
-                        data[i+c] = 255 - Math.min(255, Math.abs(val) * 2); // Dark edges on white
-                    }
+                    for (let c = 0; c < 3; c++) { let val = src[i-w*4+c] + src[i-4+c] + src[i+4+c] + src[i+w*4+c] - 4*src[i+c]; data[i+c] = 255 - Math.min(255, Math.abs(val) * 2); }
                 }
             }
         }
-
-        function saveImage() {
-            if (!originalImage) { alert("هیڤیە سەرەتا وێنەیەکێ دابنە"); return; }
-            const link = document.createElement('a'); link.download = 'DaSTaN7_Laser_Ready.png';
-            link.href = canvasAfter.toDataURL('image/png'); link.click();
-        }
+        function saveImage() { if (!originalImage) { alert("هیڤیە سەرەتا وێنەیەکێ دابنە"); return; } const link = document.createElement('a'); link.download = 'DaSTaN7_Laser_Ready.png'; link.href = canvasAfter.toDataURL('image/png'); link.click(); }
 
         // ==========================================
-        // Cropper Logic
+        // 6. Cropper Logic
         // ==========================================
-        const cropModal = document.getElementById('cropModal');
-        const cropImage = document.getElementById('cropImage');
-        
-        function openCropModal() {
-            if (!originalImage) { alert("سەرەتا وێنەیەکێ هەلبژێرە!"); return; }
-            cropImage.src = originalImage.src;
-            cropModal.classList.add('show');
-            if(cropper) cropper.destroy();
-            cropper = new Cropper(cropImage, { viewMode: 1, dragMode: 'crop', autoCropArea: 1, responsive: true });
-        }
-        
+        const cropModal = document.getElementById('cropModal'); const cropImage = document.getElementById('cropImage');
+        function openCropModal() { if (!originalImage) { alert("سەرەتا وێنەیەکێ هەلبژێرە!"); return; } cropImage.src = originalImage.src; cropModal.classList.add('show'); if(cropper) cropper.destroy(); cropper = new Cropper(cropImage, { viewMode: 1, dragMode: 'crop', autoCropArea: 1, responsive: true }); }
         function closeCropModal() { cropModal.classList.remove('show'); if(cropper) cropper.destroy(); }
-        
-        function saveCrop() {
-            if(cropper) {
-                const croppedCanvas = cropper.getCroppedCanvas();
-                const newImg = new Image();
-                newImg.onload = function() { loadImageToCanvas(newImg); }
-                newImg.src = croppedCanvas.toDataURL();
-                closeCropModal();
-            }
-        }
+        function saveCrop() { if(cropper) { const croppedCanvas = cropper.getCroppedCanvas(); const newImg = new Image(); newImg.onload = function() { loadImageToCanvas(newImg); }; newImg.src = croppedCanvas.toDataURL(); closeCropModal(); } }
 
         window.addEventListener('load', () => { checkSession(); if(tmURL && tmURL !== "") initAI(); });
 
-        // User Modals Events
-        const usersModal = document.getElementById('usersModal');
-        function openUsersModal() { renderUserTable(); usersModal.classList.add('show'); }
-        function closeUsersModal() { usersModal.classList.remove('show'); }
+        // ==========================================
+        // 7. Hatch Settings Modals & Users
+        // ==========================================
+        const usersModal = document.getElementById('usersModal'); function openUsersModal() { renderUserTable(); usersModal.classList.add('show'); } function closeUsersModal() { usersModal.classList.remove('show'); }
+        const hatchModal = document.getElementById('hatchModal'); function openHatchModal() { hatchModal.classList.add('show'); } function closeHatchModal() { hatchModal.classList.remove('show'); }
+        window.onclick = function(event) { if (event.target == guideModal) closeGuideModal(); if (event.target == hatchModal) closeHatchModal(); if (event.target == usersModal) closeUsersModal(); if (event.target == cropModal) closeCropModal(); }
 
-        const hatchModal = document.getElementById('hatchModal');
-        function openHatchModal() { hatchModal.classList.add('show'); }
-        function closeHatchModal() { hatchModal.classList.remove('show'); }
-        
-        window.onclick = function(event) { 
-            if (event.target == hatchModal) closeHatchModal(); 
-            if (event.target == usersModal) closeUsersModal();
-            if (event.target == cropModal) closeCropModal();
+        const hatchData = [
+            { "Name": "Aluminum General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Rinse with Water)" },
+            { "Name": "Aluminum Dark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,002", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Rinse with Water)" },
+            { "Name": "Aluminum White Finish", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe clean with dry microfiber cloth - oil will stain, may rinse with water" },
+            { "Name": "Aluminum Brilliance Laser Ink", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Very sensitive, will take some work to get your settings just right." },
+            { "Name": "Aluminum Cut", "Hatch Icon": "CUT", "Hatch Pattern": "CUT", "Active Hatches": "CUT", "Line Distance": "CUT", "Notes": "Cut with .001mm Diameter and Distance" },
+            { "Name": "Brass General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Oil)" },
+            { "Name": "Brass Black Deep", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Use toothbrush and apply generous oil to remove debris. Brush with grain." },
+            { "Name": "Brass Photo Details", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Works best with a brass general base pass." },
+            { "Name": "Electro Plating", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Removes Electro Plating to engrave base metal underneath" },
+            { "Name": "Copper General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Use toothbrush and apply generous oil to remove debris. Brush with grain." },
+            { "Name": "Zinc Core Darken", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "For darkening core alloys, often those found under electroplating" },
+            { "Name": "Pmag Tan", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,05", "Notes": "Wipe with Clean Dry Microfiber Cloth" },
+            { "Name": "Pmag Brown", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,1", "Notes": "Wipe with Clean Dry Microfiber Cloth" },
+            { "Name": "Pmag Gray", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,08", "Notes": "Wipe with Clean Dry Microfiber Cloth" },
+            { "Name": "Polyester Sheet Cut", "Hatch Icon": "CUT", "Hatch Pattern": "CUT", "Active Hatches": "CUT", "Line Distance": "CUT", "Notes": "Cuts 99% of the way through, then just pop out cut outs with your finger!" },
+            { "Name": "Leather Gentle", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Leather Gentle Low KHZ", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe clean with a clean dry microfiber cloth for all." },
+            { "Name": "Leather General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Run as many passes as needed to break through the surface" },
+            { "Name": "Leather General Low KHZ", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Stop and move to a lower power setting after breaking through" },
+            { "Name": "Leather Resistant", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "if you experience excessive burning. IE, 2 Pass Resistant -> 2 Pass Gentle" },
+            { "Name": "Leather Resistant Low KHZ", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Leather Large Projects", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Pine Wood Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 0°", "Line Distance": ",2", "Notes": "Sand as needed" },
+            { "Name": "Steel General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Apply 3-in-1 Oil, Brush generously, (Optionally clean with degreaser)" },
+            { "Name": "Steel Deep Engrave", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,01", "Notes": "Finish with Steel General, Anneal or Steel White Finish" },
+            { "Name": "Steel White Finish", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe clean with dry microfiber cloth - oil will stain, not weather resistant" },
+            { "Name": "Steel Z-Mark Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Defocus laser 1-3mm AWAY from material for best results" },
+            { "Name": "Steel Anneal General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Helps protect the steel by heating it after engraving, has a shiny blue rainbow effect. Oil when complete." },
+            { "Name": "Steel Powder Coat Touch Free Curved", "Hatch Pattern": "Standard", "Active Hatches": "1: 0°", "Line Distance": "0,025", "Notes": "For use without rotary tool on curves, same requirements as above. +3mm focus" },
+            { "Name": "Steel Powder Coat Removal Rotary", "Hatch Pattern": "Standard", "Active Hatches": "1: 0°", "Line Distance": "0,02", "Notes": "For use with rotary tool, same requirements as above. +5.5mm focus" },
+            { "Name": "Heavy Powder Coat Photos", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "No base pass. Engrave directly into the coating. Will be darker than the engraved area, invert as needed." },
+            { "Name": "Titanium General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Oil)" },
+            { "Name": "Titanium Z-Mark Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Defocus laser 1-3mm AWAY from material for best results" },
+            { "Name": "Titanium Anneal General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Helps protect the steel by heating it after engraving, turns titanium GOLD. Oil when complete." },
+            { "Name": "Silver General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Yellow color is natural fiber laser result, your settings are correct." },
+            { "Name": "Silver Dark Deep", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Only works on solid silver, silver plating is too thin to stand up to this mark." },
+            { "Name": "Silver Satin Finish", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,026", "Notes": "Very smooth silver finish on silver" },
+            { "Name": "Silver Photo Base", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Use for photo silhouette background FIRST" },
+            { "Name": "Silver Photo White", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Use for photo silhouette background SECOND" },
+            { "Name": "Silver Photo Finish", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP", "Notes": "Run your actual photo on top of your base with this pass. Make sure to check pixel power and enable mark low." },
+            { "Name": "Slate Light Grey", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.1", "Notes": "No matter how deep or how many passes you run it will stay light grey, great for adding depth to your slate." },
+            { "Name": "Slate White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.1", "Notes": "Slate White must be DEFOCUSED 3mm closer to the slate to work." },
+            { "Name": "Slate Tan", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.1", "Notes": "Run multiple times to achieve a cool \"glass\" effect, but careful, it's non reversible." },
+            { "Name": "Black Granite Gray", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Run as many times as you want for added depth, gets less efficient over time though." },
+            { "Name": "14K White Gold Base", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K White Gold Cleanup", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K White Gold Anneal White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K White Gold Gold Sparkle", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "14K White Gold Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "14K White Gold Photo Base", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "14K White Gold Photo White", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "14K White Gold Photo Details", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "14K Rose Gold Base", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K Rose Gold Cleanup", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K Rose Gold Bright", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "14K Rose Gold Medium", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "14K Rose Gold Dark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "10-14K Yellow Gold Base", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "10-14K Yellow Gold Cleanup", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "10-14K Yellow Gold Bright", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.025" },
+            { "Name": "10-14K Yellow Gold Medium", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "10-14K Yellow Gold Dark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0.001" },
+            { "Name": "10-14K Y/R Gold Photo Base", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "10-14K Y/R Gold Photo Cleanup", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "10-14K Y/R Gold Photo Details", "Hatch Icon": "BITMAP", "Hatch Pattern": "BITMAP", "Active Hatches": "BITMAP", "Line Distance": "BITMAP" },
+            { "Name": "10-14K Gold CUT", "Hatch Icon": "CUT", "Hatch Pattern": "CUT", "Active Hatches": "CUT", "Line Distance": "CUT", "Notes": "Turn on WOBBLE - .3 Diameter - .1 Distance, run as needed until you cut through." },
+            { "Name": "EXPERIMENTAL" },
+            { "Name": "ABS General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "ABS Black", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "ABS White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Black Delrin Tan Mark", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Glock Polymer Stippling", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Glock Polymer Engrave", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "CPVC White", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Kydex", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "Tin", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Pewter Gray", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Pewter Shiny Silver", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Granite General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Rocks and Stones General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Browning Firearm Composite", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Golf Ball Experimental", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025" },
+            { "Name": "Glass", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,01", "Notes": "Place steel behind glass, focus laser to steel, place glass on top, reverse image and engrave." },
+            { "Name": "1 Layer Cerkote Remove", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,01", "Notes": "Place steel behind glass, focus laser to steel, place glass on top, reverse image and engrave." },
+            { "Name": "White ABS Gray", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,08", "Notes": "Potentially dangerous gas emmissons - handle with care." },
+            { "Name": "ABS High Frequency", "Hatch Pattern": "Snake", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,1", "Notes": "Potentially dangerous gas emmissons - handle with care." }
+        ];
+
+        const hatchSelect = document.getElementById("hatchMaterialSelect");
+        hatchData.forEach((item, index) => { let option = document.createElement("option"); option.value = index; option.textContent = item.Name; hatchSelect.appendChild(option); });
+
+        function applyModalTheme(materialName) {
+            const root = document.documentElement; const name = materialName.toLowerCase(); const isAdmin = document.body.classList.contains('admin-mode');
+            if (name === "") { root.style.setProperty('--modal-primary', isAdmin ? '#ffd700' : '#00adb5'); return; }
+            if (name.includes('gold')) { root.style.setProperty('--modal-primary', '#ffd700'); } 
+            else if (name.includes('silver') || name.includes('steel') || name.includes('aluminum') || name.includes('titanium') || name.includes('tin') || name.includes('pewter')) { root.style.setProperty('--modal-primary', '#b0bec5'); } 
+            else if (name.includes('brass') || name.includes('copper') || name.includes('zinc')) { root.style.setProperty('--modal-primary', '#e67e22'); } 
+            else if (name.includes('leather') || name.includes('wood')) { root.style.setProperty('--modal-primary', '#d35400'); } 
+            else if (name.includes('abs') || name.includes('pmag') || name.includes('polymer') || name.includes('kydex') || name.includes('delrin') || name.includes('cpvc')) { root.style.setProperty('--modal-primary', '#00d2ff'); } 
+            else if (name.includes('slate') || name.includes('granite') || name.includes('stone') || name.includes('glass')) { root.style.setProperty('--modal-primary', '#95a5a6'); } 
+            else { root.style.setProperty('--modal-primary', isAdmin ? '#ffd700' : '#00adb5'); }
+        }
+
+        function updateHatchUI() {
+            const index = hatchSelect.value; const detailsWrapper = document.getElementById("hDetailsWrapper"); const cardContent = document.getElementById("hCardContent"); const mTitle = document.getElementById("hMTitle");
+            if (index === "") { detailsWrapper.classList.remove("active"); applyModalTheme(""); return; }
+            const item = hatchData[index]; applyModalTheme(item.Name); mTitle.textContent = item.Name;
+            let html = "";
+            if (item["Hatch Icon"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">ئایکۆنێ نەخشێ</span><span class="h-label-en">Hatch Icon</span></div><div class="h-value-box">${item["Hatch Icon"]}</div></div>`;
+            if (item["Hatch Pattern"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">شێوازێ نەخشێ</span><span class="h-label-en">Hatch Pattern</span></div><div class="h-value-box">${item["Hatch Pattern"]}</div></div>`;
+            if (item["Active Hatches"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">نەخشێن چالاک</span><span class="h-label-en">Active Hatches</span></div><div class="h-value-box">${item["Active Hatches"]}</div></div>`;
+            if (item["Line Distance"]) html += `<div class="h-info-row"><div class="h-label-group"><span class="h-label-ku">دویراتیا هێلان</span><span class="h-label-en">Line Distance</span></div><div class="h-value-box">${item["Line Distance"]}</div></div>`;
+            if (item["Notes"]) html += `<div class="h-notes-section"><div class="h-notes-title"><span>تێبینی</span><span style="font-size: 12px; color: #c0392b;">Notes</span></div><div class="h-notes-text">${item["Notes"]}</div></div>`;
+            cardContent.innerHTML = html; detailsWrapper.classList.add("active");
         }
 
         function renderUserTable() {
@@ -739,12 +856,7 @@
                 tbody.innerHTML += `<tr><td style="font-weight:bold;">${u.username}</td><td style="font-family:monospace;">${u.password}</td><td>${roleBadge}</td><td style="text-align:center;">${actions}</td></tr>`;
             });
         }
-        function addNewUser() {
-            const name = document.getElementById('newUsername').value.trim(); const pass = document.getElementById('newPassword').value.trim(); const role = document.getElementById('newRole').value;
-            if (!name || !pass) { alert("کەرەمکە ناڤ و پاسواردێ بنڤیسە!"); return; }
-            let users = getUsers(); if (users.find(u => u.username === name)) { alert("ئەڤ ناڤە یێ هەی!"); return; }
-            users.push({ username: name, password: pass, role: role }); saveUsers(users); document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; renderUserTable();
-        }
+        function addNewUser() { const name = document.getElementById('newUsername').value.trim(); const pass = document.getElementById('newPassword').value.trim(); const role = document.getElementById('newRole').value; if (!name || !pass) { alert("کەرەمکە ناڤ و پاسواردێ بنڤیسە!"); return; } let users = getUsers(); if (users.find(u => u.username === name)) { alert("ئەڤ ناڤە یێ هەی!"); return; } users.push({ username: name, password: pass, role: role }); saveUsers(users); document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; renderUserTable(); }
         function deleteUser(username) { if(confirm(`تۆ دڵنیایی دڤێت هەژمارا '${username}' بسڕی؟`)) { let users = getUsers(); users = users.filter(u => u.username !== username); saveUsers(users); renderUserTable(); } }
         function toggleRole(username) { let users = getUsers(); let user = users.find(u => u.username === username); if (user) { user.role = user.role === 'admin' ? 'user' : 'admin'; saveUsers(users); renderUserTable(); } }
         function changePass(username) { let newPass = prompt(`پاسواردێ نووی بۆ '${username}' بنڤیسە:`); if (newPass && newPass.trim() !== '') { let users = getUsers(); let user = users.find(u => u.username === username); if (user) { user.password = newPass.trim(); saveUsers(users); renderUserTable(); } } }
