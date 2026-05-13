@@ -49,28 +49,12 @@
         /* DEMO MODE LOCKS                           */
         /* ========================================= */
         .requires-pro { position: relative; }
-        body.demo-mode .requires-pro {
-            pointer-events: none !important;
-            user-select: none;
-            opacity: 0.5;
-            filter: grayscale(80%);
-        }
+        body.demo-mode .requires-pro { pointer-events: none !important; user-select: none; opacity: 0.5; filter: grayscale(80%); }
         body.demo-mode .requires-pro::after {
-            content: '🔒 Pro';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(231, 76, 60, 0.95);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-weight: 900;
-            font-size: 14px;
-            z-index: 50;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            letter-spacing: 1px;
-            direction: ltr;
+            content: '🔒 Pro'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(231, 76, 60, 0.95); color: #fff; padding: 6px 14px; border-radius: 8px;
+            font-weight: 900; font-size: 14px; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            letter-spacing: 1px; direction: ltr;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -124,7 +108,7 @@
         .control-group select { width: 100%; padding: 14px; background: var(--bg-input); color: white; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 15px; font-weight: 500; outline: none; cursor: pointer; }
         .control-group select:focus { border-color: var(--primary); }
         
-        /* Boxes */
+        /* AI & Editor Box */
         .ai-box { background: rgba(var(--primary), 0.1); padding: 25px 20px; border-radius: var(--radius-lg); border: 2px dashed var(--primary); transition: 0.3s; text-align: center; margin-bottom: 25px; box-shadow: 0 0 15px rgba(var(--primary), 0.1); }
         .ai-box label { color: var(--primary); font-size: 16px; margin-bottom: 15px; }
         
@@ -134,7 +118,7 @@
         .checkbox-container label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-light); font-size: 14px;}
         .checkbox-container input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
         
-        .ezcad-panel { background: var(--bg-input); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-top: 25px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
+        .ezcad-panel { background: var(--bg-input); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); margin-top: 25px; }
         .ezcad-panel h3 { color: var(--primary); margin-bottom: 18px; font-size: 16px; text-align: center; border-bottom: 1px dashed var(--border); padding-bottom: 10px;}
         .param-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; font-weight: 500;}
         .param-row span:last-child { color: var(--primary); font-weight: 800; font-family: monospace; font-size: 16px;}
@@ -175,6 +159,7 @@
         body.mobile-mode .main-content { flex-direction: column; height: auto; overflow: visible; }
         body.mobile-mode .workspace { order: 1; padding: 10px; background: #000; height: 450px; flex: none; width: 100%; }
         body.mobile-mode .canvas-container { border-radius: 0; border: none; padding: 0; box-shadow: none; background: transparent; height: 100%;}
+        body.mobile-mode .canvas-title { font-size: 13px; margin-bottom: 10px; }
         body.mobile-mode .sidebar { order: 2; width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 25px 20px; background: var(--bg-panel); border-radius: 24px 24px 0 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.5); z-index: 10;}
         body.mobile-mode .control-group input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
         body.mobile-mode .control-group select { padding: 16px; font-size: 16px; }
@@ -530,14 +515,15 @@
 
     <script>
         // ==========================================
-        // 1. User DB & Registration
+        // 1. User DB, Auth, and Registration Logic
         // ==========================================
-        const SECRET_PRO_CODE = "DASTAN-PRO-109"; 
+        const SECRET_PRO_CODE = "DASTAN-PRO-109";
 
         function initDB() { 
             let usersStr = localStorage.getItem('dastan_users'); 
             let parsed = null;
             try { parsed = JSON.parse(usersStr); } catch(e) {}
+            
             if (!parsed || !Array.isArray(parsed) || parsed.length === 0) { 
                 const defaultUsers = [
                     { username: 'Dastan', password: '19971997', role: 'admin' }, 
@@ -551,46 +537,94 @@
         function saveUsers(usersArray) { localStorage.setItem('dastan_users', JSON.stringify(usersArray)); }
         
         function toggleAuthMode() {
-            const loginBox = document.getElementById('loginBox'); const registerBox = document.getElementById('registerBox');
-            document.getElementById('error-msg').style.display = 'none'; document.getElementById('reg-error-msg').style.display = 'none';
-            if (loginBox.style.display === 'none') { loginBox.style.display = 'block'; registerBox.style.display = 'none'; } 
-            else { loginBox.style.display = 'none'; registerBox.style.display = 'block'; }
+            const loginBox = document.getElementById('loginBox');
+            const registerBox = document.getElementById('registerBox');
+            document.getElementById('error-msg').style.display = 'none';
+            document.getElementById('reg-error-msg').style.display = 'none';
+            
+            if (loginBox.style.display === 'none') {
+                loginBox.style.display = 'block';
+                registerBox.style.display = 'none';
+            } else {
+                loginBox.style.display = 'none';
+                registerBox.style.display = 'block';
+            }
         }
 
-        function showCodeInfo() { document.getElementById('codeInfo').style.display = 'block'; }
+        function showCodeInfo() {
+            document.getElementById('codeInfo').style.display = 'block';
+        }
 
         function checkCodeLive() {
             const code = document.getElementById('regCode').value.trim();
             if(code === SECRET_PRO_CODE) {
                 document.getElementById('codeInfo').innerHTML = "✅ کۆدێ تە یێ دروستە! هەژمارا تە دێ بیتە Pro.";
-                document.getElementById('codeInfo').style.background = "rgba(46, 204, 113, 0.2)"; document.getElementById('codeInfo').style.borderColor = "#2ecc71"; document.getElementById('codeInfo').style.color = "#2ecc71"; document.getElementById('codeInfo').style.textAlign = "center";
+                document.getElementById('codeInfo').style.background = "rgba(46, 204, 113, 0.2)";
+                document.getElementById('codeInfo').style.borderColor = "#2ecc71";
+                document.getElementById('codeInfo').style.color = "#2ecc71";
+                document.getElementById('codeInfo').style.textAlign = "center";
             }
         }
 
         function registerUser() {
-            const name = document.getElementById('regUsername').value.trim(); const pass = document.getElementById('regPassword').value; const code = document.getElementById('regCode').value.trim();
+            const name = document.getElementById('regUsername').value.trim();
+            const pass = document.getElementById('regPassword').value;
+            const code = document.getElementById('regCode').value.trim();
             const errorMsg = document.getElementById('reg-error-msg');
-            if (!name || !pass) { errorMsg.innerText = "کەرەمکە ناڤ و پاسواردێ بنڤیسە!"; errorMsg.style.display = 'block'; return; }
+            
+            if (!name || !pass) {
+                errorMsg.innerText = "کەرەمکە ناڤ و پاسواردێ بنڤیسە!";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
             let users = getUsers();
-            if (users.find(u => u.username.toLowerCase() === name.toLowerCase())) { errorMsg.innerText = "ئەڤ ناڤە یێ هەی، کەرەمکە ئێکێ دی هەلبژێرە!"; errorMsg.style.display = 'block'; return; }
+            if (users.find(u => u.username.toLowerCase() === name.toLowerCase())) {
+                errorMsg.innerText = "ئەڤ ناڤە یێ هەی، کەرەمکە ئێکێ دی هەلبژێرە!";
+                errorMsg.style.display = 'block';
+                return;
+            }
 
             let newRole = 'demo';
-            if (code === SECRET_PRO_CODE) newRole = 'user'; 
-            
+            if (code === SECRET_PRO_CODE) {
+                newRole = 'user';
+            }
+
             const newUser = { username: name, password: pass, role: newRole };
-            users.push(newUser); saveUsers(users);
-            localStorage.setItem('active_user', JSON.stringify(newUser)); setupUIForUser(newUser);
+            users.push(newUser);
+            saveUsers(users);
+
+            localStorage.setItem('active_user', JSON.stringify(newUser));
+            setupUIForUser(newUser);
         }
 
-        function checkSession() { initDB(); const activeUserStr = localStorage.getItem('active_user'); if (activeUserStr) { try { setupUIForUser(JSON.parse(activeUserStr)); } catch(e) { localStorage.removeItem('active_user'); } } }
+        function checkSession() { 
+            initDB(); 
+            const activeUserStr = localStorage.getItem('active_user'); 
+            if (activeUserStr) { 
+                try {
+                    setupUIForUser(JSON.parse(activeUserStr)); 
+                } catch(e) {
+                    localStorage.removeItem('active_user');
+                }
+            } 
+        }
 
         function checkLogin() { 
             document.getElementById('error-msg').style.display = 'none';
-            const user = document.getElementById('username').value.trim(); const pass = document.getElementById('password').value; 
+            const user = document.getElementById('username').value.trim(); 
+            const pass = document.getElementById('password').value; 
             const users = getUsers() || [];
+            
             const foundUser = users.find(u => u.username.toLowerCase() === user.toLowerCase() && u.password === pass); 
-            if (foundUser) { localStorage.setItem('active_user', JSON.stringify(foundUser)); setupUIForUser(foundUser); } 
-            else { document.getElementById('error-msg').innerText = "ناڤ یان پاسوارد خەلەتە!"; document.getElementById('error-msg').style.display = 'block'; } 
+            
+            if (foundUser) { 
+                localStorage.setItem('active_user', JSON.stringify(foundUser)); 
+                setupUIForUser(foundUser); 
+            } else { 
+                document.getElementById('error-msg').innerText = "ناڤ یان پاسوارد خەلەتە!";
+                document.getElementById('error-msg').style.display = 'block'; 
+            } 
         }
 
         function setupUIForUser(user) { 
@@ -601,54 +635,81 @@
             document.getElementById('adminBadge').style.display = 'none';
             document.getElementById('coadminBadge').style.display = 'none';
 
-            // ڤەکرنا قوفلان وەکو دەسپێک
             const locks = ['guideBtnWrap', 'hatchBtnWrap', 'saveBtnWrap', 'aiBoxWrap', 'ezCadWrap'];
-            locks.forEach(id => document.getElementById(id).classList.remove('requires-pro'));
+            locks.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.remove('requires-pro');
+            });
 
             if (user.role === 'admin') { 
                 document.body.classList.add('admin-mode'); 
                 document.getElementById('welcomeMessage').innerText = `بۆردێ تایبەت یێ ${user.username}`; 
-                document.getElementById('welcomeMessage').style.borderColor = "#ffd700"; document.getElementById('welcomeMessage').style.color = "#fff"; 
-                document.getElementById('adminBadge').style.display = 'inline-block'; document.getElementById('usersAdminBtn').style.display = 'flex'; 
+                document.getElementById('welcomeMessage').style.borderColor = "#ffd700"; 
+                document.getElementById('welcomeMessage').style.color = "#fff"; 
+                document.getElementById('adminBadge').style.display = 'inline-block';
+                document.getElementById('usersAdminBtn').style.display = 'flex'; 
             } else if (user.role === 'co-admin') {
                 document.body.classList.add('coadmin-mode'); 
                 document.getElementById('welcomeMessage').innerText = `بۆردێ هاریکار یێ ${user.username}`; 
-                document.getElementById('welcomeMessage').style.borderColor = "#c2185b"; document.getElementById('welcomeMessage').style.color = "#fff"; 
-                document.getElementById('coadminBadge').style.display = 'inline-block'; document.getElementById('usersAdminBtn').style.display = 'none'; 
+                document.getElementById('welcomeMessage').style.borderColor = "#c2185b"; 
+                document.getElementById('welcomeMessage').style.color = "#fff"; 
+                document.getElementById('coadminBadge').style.display = 'inline-block';
+                document.getElementById('usersAdminBtn').style.display = 'none'; 
             } else if (user.role === 'demo') {
                 document.body.classList.add('demo-mode'); 
                 document.getElementById('welcomeMessage').innerText = `🔒 دێمۆ (Demo) - ${user.username}`; 
-                document.getElementById('welcomeMessage').style.borderColor = "#e74c3c"; document.getElementById('welcomeMessage').style.color = "#e74c3c"; 
+                document.getElementById('welcomeMessage').style.borderColor = "#e74c3c"; 
+                document.getElementById('welcomeMessage').style.color = "#e74c3c"; 
                 document.getElementById('usersAdminBtn').style.display = 'none'; 
-                // دانانا قوفلان ل سەر بەشێن تایبەت
-                locks.forEach(id => document.getElementById(id).classList.add('requires-pro'));
+                locks.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.classList.add('requires-pro');
+                });
             } else { 
                 document.getElementById('welcomeMessage').innerText = `👋 بخێرهاتی ${user.username} (Pro)`; 
-                document.getElementById('welcomeMessage').style.borderColor = "var(--primary)"; document.getElementById('welcomeMessage').style.color = "#fff"; 
+                document.getElementById('welcomeMessage').style.borderColor = "var(--primary)"; 
+                document.getElementById('welcomeMessage').style.color = "#fff"; 
                 document.getElementById('usersAdminBtn').style.display = 'none'; 
             }
-            if(originalImage) processImage(); // دووبارە ڕێفرێشکرنا وێنەی بۆ لابردنا یان دانانا وۆتەرمارک
+            if(originalImage) processImage();
         }
 
         function logout() { 
-            localStorage.removeItem('active_user'); document.getElementById('auth-screen').style.display = 'flex'; document.getElementById('app-screen').style.display = 'none'; 
-            document.getElementById('username').value = ''; document.getElementById('password').value = ''; document.getElementById('error-msg').style.display = 'none'; 
-            document.body.classList.remove('admin-mode', 'coadmin-mode', 'demo-mode'); resetZoom(); 
+            localStorage.removeItem('active_user'); 
+            document.getElementById('auth-screen').style.display = 'flex'; 
+            document.getElementById('app-screen').style.display = 'none'; 
+            document.getElementById('username').value = ''; 
+            document.getElementById('password').value = ''; 
+            document.getElementById('error-msg').style.display = 'none'; 
+            document.body.classList.remove('admin-mode', 'coadmin-mode', 'demo-mode'); 
+            resetZoom(); 
         }
 
         document.getElementById('password').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkLogin(); });
         document.getElementById('regPassword').addEventListener('keypress', function(e) { if (e.key === 'Enter') registerUser(); });
 
         // ==========================================
-        // 2. View Toggles & ZOOM
+        // 2. Interface Toggles & Sliders & ZOOM
         // ==========================================
         let isMobileMode = false;
         function toggleViewMode() { isMobileMode = !isMobileMode; const btn = document.getElementById('viewToggleBtn'); if (isMobileMode) { document.body.classList.add('mobile-mode'); btn.innerHTML = '🖥️ کۆمپیوتەر'; } else { document.body.classList.remove('mobile-mode'); btn.innerHTML = '📱 مۆبایل'; } setTimeout(updateCompareSlider, 100); }
         function updateCompareSlider() { const val = document.getElementById('compareSlider').value; document.getElementById('canvasAfter').style.clipPath = `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`; document.getElementById('sliderLine').style.left = `${val}%`; document.getElementById('sliderThumb').style.left = `${val}%`; }
 
         let currentZoom = 1;
-        function changeZoom(factor) { currentZoom *= factor; if(currentZoom < 1) currentZoom = 1; if(currentZoom > 5) currentZoom = 5; const cw = document.getElementById('compareWrapper'); cw.style.width = `${currentZoom * 100}%`; cw.style.height = `${currentZoom * 100}%`; }
-        function resetZoom() { currentZoom = 1; const cw = document.getElementById('compareWrapper'); cw.style.width = `100%`; cw.style.height = `100%`; }
+        function changeZoom(factor) {
+            currentZoom *= factor;
+            if(currentZoom < 1) currentZoom = 1; 
+            if(currentZoom > 5) currentZoom = 5; 
+            const cw = document.getElementById('compareWrapper');
+            cw.style.width = `${currentZoom * 100}%`;
+            cw.style.height = `${currentZoom * 100}%`;
+        }
+        function resetZoom() {
+            currentZoom = 1;
+            const cw = document.getElementById('compareWrapper');
+            cw.style.width = `100%`;
+            cw.style.height = `100%`;
+        }
 
         const canvasBefore = document.getElementById('canvasBefore'); const ctxBefore = canvasBefore.getContext('2d', { willReadFrequently: true });
         const canvasAfter = document.getElementById('canvasAfter'); const ctxAfter = canvasAfter.getContext('2d', { willReadFrequently: true });
@@ -743,7 +804,6 @@
 
         function applyWatermark(ctx, w, h) {
             ctx.save();
-            // لێلکرنا وێنەی تۆزەک دا نەهێتە بکارئینان
             ctx.fillStyle = "rgba(0, 0, 0, 0.4)"; 
             ctx.fillRect(0, 0, w, h);
 
@@ -754,9 +814,8 @@
             ctx.textBaseline = "middle";
             
             ctx.translate(w / 2, h / 2);
-            ctx.rotate(-Math.PI / 4); // خوارکرن ب گۆشەیا 45
+            ctx.rotate(-Math.PI / 4); 
             
-            // دوباره‌کرنا نڤیسینێ ל سەرانسەری وێنەی
             for(let i = -10; i <= 10; i++) {
                 for(let j = -3; j <= 3; j++) {
                     ctx.fillText("DaSTaN 7 DEMO", j * (w / 1.2), i * (fontSize * 2));
@@ -788,8 +847,12 @@
         function saveImage() { if (!originalImage) { alert("هیڤیە سەرەتا وێنەیەکێ دابنە"); return; } const link = document.createElement('a'); link.download = 'DaSTaN7_Laser_Ready.png'; link.href = canvasAfter.toDataURL('image/png'); link.click(); }
 
         // ==========================================
-        // Data & UI Updates (AI, Hatch, Guides) 
+        // 4. Guide Logic (ڕێبەرێ ڕەنگان - CHARASER KRI)
         // ==========================================
+        const guideModal = document.getElementById('guideModal');
+        function openGuideModal() { guideModal.classList.add('show'); }
+        function closeGuideModal() { guideModal.classList.remove('show'); }
+        
         function calculateGuide() {
             const mat = document.getElementById('guideMaterial').value; const effect = document.getElementById('guideEffect').value; const resultBox = document.getElementById('guideResult'); const exp = document.getElementById('gExplanation');
             const sSp = document.getElementById('gSpeed'); const sPo = document.getElementById('gPower'); const sFr = document.getElementById('gFreq'); const sHa = document.getElementById('gHatch');
@@ -814,17 +877,32 @@
             }
         }
 
-        const tmURL = ""; let aiModel, maxPredictions;
-        async function initAI() { if (!tmURL || tmURL === "") return; try { document.getElementById('aiStatus').innerText = "⏳ مۆدێل یێ بار دکەت..."; aiModel = await tmImage.load(tmURL + "model.json", tmURL + "metadata.json"); maxPredictions = aiModel.getTotalClasses(); document.getElementById('aiStatus').innerText = "✅ زیرەکیا دەستکرد یا ئامادەیە"; } catch (error) { document.getElementById('aiStatus').innerText = "❌ خەلەتی د بارکرنێ دا هەبوو"; } }
+        // ==========================================
+        // 5. AI Scanner Logic
+        // ==========================================
+        const tmURL = ""; 
+        let aiModel, maxPredictions;
+        async function initAI() {
+            if (!tmURL || tmURL === "") return;
+            try {
+                document.getElementById('aiStatus').innerText = "⏳ مۆدێل یێ بار دکەت...";
+                aiModel = await tmImage.load(tmURL + "model.json", tmURL + "metadata.json");
+                maxPredictions = aiModel.getTotalClasses();
+                document.getElementById('aiStatus').innerText = "✅ زیرەکیا دەستکرد یا ئامادەیە";
+            } catch (error) { document.getElementById('aiStatus').innerText = "❌ خەلەتی د بارکرنێ دا هەبوو"; }
+        }
+
         async function predictMaterial() {
             if (!originalImage) { alert("کەرەمکە سەرەتا وێنەیێ ماددەی هەلبژێرە (Upload)!"); return; }
             if (!tmURL || tmURL === "") {
                 document.getElementById('aiStatus').innerText = "🔍 یێ وێنەی تەحلیل دکەت... (Simulation)";
                 setTimeout(() => {
-                    const simulatedMats = ["stainless_steel", "gold_silver", "aluminum", "brass", "leather"]; const randomMat = simulatedMats[Math.floor(Math.random() * simulatedMats.length)];
+                    const simulatedMats = ["stainless_steel", "gold_silver", "aluminum", "brass", "leather"];
+                    const randomMat = simulatedMats[Math.floor(Math.random() * simulatedMats.length)];
                     let kuName = ""; if(randomMat === "stainless_steel") kuName = "مەعدەن (Stainless Steel)"; else if(randomMat === "gold_silver") kuName = "زێر / زیڤ (Gold/Silver)"; else if(randomMat === "aluminum") kuName = "ئەلەمینیۆم (Aluminum)"; else if(randomMat === "brass") kuName = "مس / سفر (Brass)"; else if(randomMat === "leather") kuName = "پێستی (Leather)";
                     currentDetectedMaterial = randomMat; document.getElementById('aiStatus').innerText = `🎯 هاتە دیتن: ${kuName} (Simulated)`; document.getElementById('mainMaterialSelect').value = randomMat; applyAutoSettings();
-                }, 1500); return;
+                }, 1500);
+                return;
             }
             if (!aiModel) await initAI();
             document.getElementById('aiStatus').innerText = "🔍 یێ وێنەی تەحلیل دکەت...";
@@ -857,15 +935,28 @@
             processImage();
         }
 
+        // ==========================================
+        // 6. Cropper Logic
+        // ==========================================
+        const cropModal = document.getElementById('cropModal'); const cropImage = document.getElementById('cropImage');
         function openCropModal() { if (!originalImage) { alert("سەرەتا وێنەیەکێ هەلبژێرە!"); return; } cropImage.src = originalImage.src; cropModal.classList.add('show'); if(cropper) cropper.destroy(); cropper = new Cropper(cropImage, { viewMode: 1, dragMode: 'crop', autoCropArea: 1, responsive: true }); }
         function closeCropModal() { cropModal.classList.remove('show'); if(cropper) cropper.destroy(); }
         function saveCrop() { if(cropper) { const croppedCanvas = cropper.getCroppedCanvas(); const newImg = new Image(); newImg.onload = function() { loadImageToCanvas(newImg); }; newImg.src = croppedCanvas.toDataURL(); closeCropModal(); } }
 
         window.addEventListener('load', () => { checkSession(); if(tmURL && tmURL !== "") initAI(); });
 
+        // ==========================================
+        // 7. Hatch Modals & Users
+        // ==========================================
         const usersModal = document.getElementById('usersModal'); function openUsersModal() { renderUserTable(); usersModal.classList.add('show'); } function closeUsersModal() { usersModal.classList.remove('show'); }
         const hatchModal = document.getElementById('hatchModal'); function openHatchModal() { hatchModal.classList.add('show'); } function closeHatchModal() { hatchModal.classList.remove('show'); }
-        window.onclick = function(event) { if (event.target == guideModal) closeGuideModal(); if (event.target == hatchModal) closeHatchModal(); if (event.target == usersModal) closeUsersModal(); if (event.target == cropModal) closeCropModal(); }
+        
+        window.onclick = function(event) { 
+            if (event.target == guideModal) closeGuideModal(); 
+            if (event.target == hatchModal) closeHatchModal(); 
+            if (event.target == usersModal) closeUsersModal(); 
+            if (event.target == cropModal) closeCropModal(); 
+        }
 
         const hatchData = [
             { "Name": "Aluminum General", "Hatch Pattern": "Standard", "Active Hatches": "1: 45° | 2: -45°", "Line Distance": "0,025", "Notes": "Wipe with Clean Dry Microfiber Cloth (Optionally Rinse with Water)" },
